@@ -1,20 +1,88 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:GraphCalc.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="GraphCalc.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="GraphCalc">
+<Window
+    x:Class="GraphCalc.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="using:GraphCalc.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:paz="using:Avalonia.Controls.PanAndZoom"
+    xmlns:vm="using:GraphCalc.ViewModels"
+    Title="GraphCalc"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:MainWindowViewModel"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel/>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Panel Background="GhostWhite">
+        <Grid ColumnDefinitions="*,3*">
+            <Border Grid.Column="0" Margin="10" Background="White">
+                <DockPanel>
+                    <Panel Height="35" Background="WhiteSmoke" DockPanel.Dock="Bottom">
+                        <Grid VerticalAlignment="Stretch" ColumnDefinitions="*,*,*,*">
+                            <Button Grid.Column="0" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="Button" />
+                            <Button Grid.Column="1" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="Button" />
+                            <Button Grid.Column="2" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="Button" />
+                            <Button Grid.Column="3" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="Button" />
+                        </Grid>
+                    </Panel>
+                    <StackPanel Margin="10" DockPanel.Dock="Top">
+                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Greeting}" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <Border Grid.Column="1" Margin="10" Background="White">
+                <!-- <StackPanel Grid.Column="0" Margin="10">
+                </StackPanel>-->
+                <Grid ColumnDefinitions="50,*,50" RowDefinitions="Auto,12,Auto,12,*,12">
+                    <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Orientation="Vertical">
+                        <TextBlock Text="R - Reset" />
+                        <TextBlock Text="Mouse Wheel - Zoom to Point" />
+                        <TextBlock Text="Mouse Left Button Down - Pan" />
+                        <TextBlock Text="{Binding #ZoomBorder.OffsetX}" />
+                        <TextBlock Text="{Binding #ZoomBorder.OffsetY}" />
+                        <TextBlock Text="{Binding #ZoomBorder.ZoomX}" />
+                        <TextBlock Text="{Binding #ZoomBorder.ZoomY}" />
+                        <TextBlock Text="{Binding #GraphGrid.Log}" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal" />
+                    <Panel Grid.Row="4" Grid.Column="1">
+                        <c:GraphGridControl
+                            Name="GraphGrid"
+                            OffsetX="{Binding #ZoomBorder.OffsetX}"
+                            OffsetY="{Binding #ZoomBorder.OffsetY}"
+                            ZoomX="{Binding #ZoomBorder.ZoomX}"
+                            ZoomY="{Binding #ZoomBorder.ZoomY}" />
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                            <paz:ZoomBorder
+                                Name="ZoomBorder"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="AliceBlue"
+                                ClipToBounds="True"
+                                EnablePan="True"
+                                EnableZoom="True"
+                                Focusable="True"
+                                PanButton="Left"
+                                Stretch="None"
+                                ZoomSpeed="1.4"
+                                Opacity="0.5">
+                                <Rectangle Width="1" Height="1" Fill="Black" />
+                            </paz:ZoomBorder>
+                        </ScrollViewer>
+                    </Panel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Panel>
 
 </Window>
