@@ -24,7 +24,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public void RebuildSpline()
     {
         Splines.Splines.Clear();
-        var spline = SplineBuilder.BuildQuadraticSpline([.. SplinePoints.Select(p => new Vector2((float)p.X, (float)p.Y))]);
+        var spline = SplineBuilder.BuildQuadraticSpline([.. SplinePoints.OrderBy(p => p.X).Select(p => new Vector2((float)p.X, (float)p.Y))]);
         if (spline != null) Splines.Splines.Add(spline);
     }
 
