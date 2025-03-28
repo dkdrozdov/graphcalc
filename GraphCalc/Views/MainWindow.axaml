@@ -27,16 +27,56 @@
             <Border Grid.Column="0" Margin="10" Background="White">
                 <DockPanel>
                     <Panel Height="35" Background="WhiteSmoke" DockPanel.Dock="Bottom">
-                        <Grid VerticalAlignment="Stretch" ColumnDefinitions="*,*,*,*">
-                            <Button Grid.Column="0" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="Button" />
-                            <Button Grid.Column="1" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="Button" />
-                            <Button Grid.Column="2" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="Button" />
-                            <Button Grid.Column="3" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Content="Button" />
+                        <Grid VerticalAlignment="Stretch" ColumnDefinitions="Auto, Auto, Auto">
+                            <Button
+                                Grid.Column="0"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                VerticalContentAlignment="Center"
+                                Command="{Binding AddPointCommand}"
+                                Content="+" />
+                            <Button
+                                Grid.Column="1"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                VerticalContentAlignment="Center"
+                                Command="{Binding RemovePointCommand}"
+                                Content="-" />
+                            <Button
+                                Grid.Column="2"
+                                VerticalAlignment="Stretch"
+                                HorizontalAlignment="Stretch"
+                                VerticalContentAlignment="Center"
+                                Command="{Binding RebuildSplineCommand}"
+                                Content="Build Spline" />
                         </Grid>
                     </Panel>
-                    <StackPanel Margin="10" DockPanel.Dock="Top">
-                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Greeting}" />
-                    </StackPanel>
+                    <ListBox ItemsSource="{Binding SplinePoints}" SelectedItem="{Binding SelectedPoint}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="*,*">
+                                        <Label Grid.Row="0" Grid.Column="0" Content="X:" />
+                                        <TextBox
+                                            Grid.Row="1"
+                                            Grid.Column="0"
+                                            Margin="3"
+                                            HorizontalAlignment="Stretch"
+                                            Background="White"
+                                            Text="{Binding X, UpdateSourceTrigger=LostFocus}" />
+                                        <Label Grid.Row="0" Grid.Column="1" Content="Y:" />
+                                        <TextBox
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Margin="3"
+                                            HorizontalAlignment="Stretch"
+                                            Background="White"
+                                            Text="{Binding Y, UpdateSourceTrigger=LostFocus}" />
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </DockPanel>
             </Border>
 
@@ -45,14 +85,14 @@
                 </StackPanel>-->
                 <Grid ColumnDefinitions="50,*,50" RowDefinitions="Auto,12,Auto,12,*,12">
                     <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Orientation="Vertical">
-                        <TextBlock Text="R - Reset" />
+                        <!-- <TextBlock Text="R - Reset" />
                         <TextBlock Text="Mouse Wheel - Zoom to Point" />
                         <TextBlock Text="Mouse Left Button Down - Pan" />
                         <TextBlock Text="{Binding #ZoomBorder.OffsetX}" />
                         <TextBlock Text="{Binding #ZoomBorder.OffsetY}" />
                         <TextBlock Text="{Binding #ZoomBorder.ZoomX}" />
                         <TextBlock Text="{Binding #ZoomBorder.ZoomY}" />
-                        <TextBlock Text="{Binding #GraphGrid.Log}" />
+                        <TextBlock Text="{Binding #GraphGrid.Log}" /> -->
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal" />
                     <Panel Grid.Row="4" Grid.Column="1">
@@ -60,6 +100,7 @@
                             Name="GraphGrid"
                             OffsetX="{Binding #ZoomBorder.OffsetX}"
                             OffsetY="{Binding #ZoomBorder.OffsetY}"
+                            Splines="{Binding Splines}"
                             ZoomX="{Binding #ZoomBorder.ZoomX}"
                             ZoomY="{Binding #ZoomBorder.ZoomY}" />
                         <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
@@ -72,11 +113,11 @@
                                 EnablePan="True"
                                 EnableZoom="True"
                                 Focusable="True"
+                                Opacity="0.3"
                                 PanButton="Left"
                                 Stretch="None"
-                                ZoomSpeed="1.4"
-                                Opacity="0.5">
-                                <Rectangle Width="1" Height="1" Fill="Black" />
+                                ZoomSpeed="1.4">
+                                <Rectangle Width="0" Height="0" Fill="Black" />
                             </paz:ZoomBorder>
                         </ScrollViewer>
                     </Panel>

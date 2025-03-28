@@ -6,12 +6,30 @@ using System.ComponentModel;
 using Avalonia.Interactivity;
 using System;
 using Avalonia.Metadata;
+using System.Collections.Generic;
+using GraphCalc.Models;
+using GraphCalc.ViewModels;
+using System.Linq;
 
 namespace GraphCalc.Controls;
 
 public class GraphGridControl : UserControl
 {
-    private TranslateTransform _transform = null!;
+
+    public static readonly DirectProperty<GraphGridControl, SplinesViewModel?> SplinesProperty =
+        AvaloniaProperty.RegisterDirect<GraphGridControl, SplinesViewModel?>(
+            nameof(Splines),
+            o => o.Splines,
+            (o, v) => o.Splines = v);
+
+    private SplinesViewModel? _splines;
+
+    public SplinesViewModel? Splines
+    {
+        get => _splines;
+        set => SetAndRaise(SplinesProperty, ref _splines, value);
+    }
+
     public static readonly DirectProperty<GraphGridControl, string> LogProperty =
         AvaloniaProperty.RegisterDirect<GraphGridControl, string>(
             nameof(Log),
@@ -114,10 +132,13 @@ public class GraphGridControl : UserControl
         var zs = ZoomX * baseLineDistance;
         var ls = Bounds.Width / (baseLineDistance * ZoomX);
 
-        Log = $"Left: {bl:F2}, Right: {br:F2}, Top: {bt:F2}, Bottom: {bb:F2}, Space between lines: {zs:F2}, Lines: {ls:F2}";
+        Log = $"Left: {bl:F2}, Right: {br:F2}, Top: {bt:F2}, Bottom: {bb:F2}, Space between lines: {zs:F2}, Lines: {ls:F2}\n LeftCoords: {GetLeftBorder():F1} RightCoords: {GetRightBorder():F1}";
     }
 
-    private void DrawGrid(DrawingContext context, double gridLinesDistance, double thickness, double opacity)
+    private double GetLeftBorder() => -(Bounds.Center.X + OffsetX) / ZoomX;
+    private double GetRightBorder() => -(-Bounds.Center.X + OffsetX) / ZoomX;
+
+    private void DrawGrid(DrawingContext context, double gridLinesDistance, double thickness, double opacity, Color color)
     {
         var viewCenter = Bounds.Center;
         var canvasOffset = new Point(OffsetX, OffsetY) + viewCenter;
@@ -132,78 +153,114 @@ public class GraphGridControl : UserControl
         for (int i = leftIndex; i < leftIndex + verticalGridlinesOnViewX; i++)
         {
             var x = canvasOffset.X + i * gridLinesTransformedDistanceX;
-            var normalizedX = x < 0 ? x : x;
-            context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, opacity), thickness), new Point(normalizedX, Bounds.Bottom), new Point(normalizedX, Bounds.Top));
+            context.DrawLine(new Pen(new SolidColorBrush(color, opacity), thickness), new Point(x, Bounds.Bottom), new Point(x, Bounds.Top));
         }
 
-        // var gridLinesTransformedDistanceY = gridLinesDistance * ZoomY;
-        // var verticalGridlinesOnViewY = Bounds.Height / gridLinesTransformedDistanceY;
-        // var canvasTop = -canvasOffset.Y;
-        // var canvasBottom = canvasTop + Bounds.Height;
+        var gridLinesTransformedDistanceY = gridLinesDistance * ZoomY;
+        var verticalGridlinesOnViewY = Bounds.Height / gridLinesTransformedDistanceY;
+        var canvasTop = -canvasOffset.Y;
+        var canvasBottom = canvasTop + Bounds.Height;
 
-        // var topIndex = (int)(canvasTop / gridLinesTransformedDistanceY) + ((canvasTop < 0) ? 0 : 1);
+        var topIndex = (int)(canvasTop / gridLinesTransformedDistanceY) + ((canvasTop < 0) ? 0 : 1);
 
-        // for (int i = topIndex; i < topIndex + verticalGridlinesOnViewY; i++)
-        // {
-        //     var y = canvasOffset.Y + i * gridLinesTransformedDistanceY;
-        //     var normalizedY = y < 0 ? y : y;
-        //     context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, opacity), thickness), new Point(Bounds.Left, normalizedY), new Point(Bounds.Right, normalizedY));
-        // }
+        for (int i = topIndex; i < topIndex + verticalGridlinesOnViewY; i++)
+        {
+            var y = canvasOffset.Y + i * gridLinesTransformedDistanceY;
+            context.DrawLine(new Pen(new SolidColorBrush(color, opacity), thickness), new Point(Bounds.Left, y), new Point(Bounds.Right, y));
+        }
     }
 
-    public override void Render(DrawingContext context)
+
+    private void DrawAxes(DrawingContext context, double thickness, double opacity, Color color)
     {
         var viewCenter = Bounds.Center;
         var canvasOffset = new Point(OffsetX, OffsetY) + viewCenter;
 
-        // context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, 1), 1), new Point(0, 0), new Point(100, 100));
-        // context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, 1), 1), new Point(Bounds.Left - OffsetX, Bounds.Top), new Point(Bounds.Right, Bounds.Top));
-        // context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, 1), 1), new Point(0, 0), new Point(OffsetX, OffsetY));
-
-        DrawGrid(context, baseLineDistance, 2.4, 0.8);
-        // DrawGrid(context, 10.0, 2.0, 0.6);
-
-        // context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, 1), 1.5), new Point(canvasCenter.X, Bounds.Bottom), new Point(canvasCenter.X, Bounds.Top));
-
-        // Cross
         if (Bounds.Left <= canvasOffset.X && canvasOffset.X <= Bounds.Right)
-            context.DrawLine(new Pen(new SolidColorBrush(Colors.Gray, 0.5), 3.5), new Point(canvasOffset.X, Bounds.Bottom), new Point(canvasOffset.X, Bounds.Top));
+            context.DrawLine(new Pen(new SolidColorBrush(color, opacity), thickness),
+                                new Point(canvasOffset.X, Bounds.Bottom),
+                                new Point(canvasOffset.X, Bounds.Top)
+                            );
 
         if (Bounds.Top <= canvasOffset.Y && canvasOffset.Y <= Bounds.Bottom)
-            context.DrawLine(new Pen(new SolidColorBrush(Colors.Gray, 0.5), 3.5), new Point(Bounds.Left, canvasOffset.Y), new Point(Bounds.Right, canvasOffset.Y));
+            context.DrawLine(new Pen(new SolidColorBrush(color, opacity), thickness),
+                                new Point(Bounds.Left, canvasOffset.Y),
+                                new Point(Bounds.Right, canvasOffset.Y)
+                            );
 
-
-        // context.DrawRectangle(
-        //     new SolidColorBrush(GetCellAtOrDefault(i, j)?.State?.Color ?? Colors.Black),
-        //     null,
-        //     new Rect(
-        //         new Point(
-        //             Bounds.Width * i / columns,
-        //             Bounds.Height * j / rows),
-        //         new Point(
-        //             Bounds.Width * (i + 1) / columns,
-        //             Bounds.Height * (j + 1) / rows)));
-
-
-
-        // context.DrawEllipse(
-        //     Brushes.White,
-        //     null,
-        //     new Point(0.5 * Bounds.Width + Bounds.Left,
-        // 0.5 * Bounds.Height + Bounds.Top),
-        //     10,
-        //     10);
-        // // }
-
-        base.Render(context);
-
-        // Request next frame as soon as possible, if the game is running. Remember to reset the stopwatch.
-        // if (IsRunning)
-        // {
-        Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
-        // _stopwatch.Restart();
-        // }
     }
 
 
+    public static void DrawPoint(DrawingContext context, Point p)
+    {
+        context.DrawEllipse(new SolidColorBrush(Colors.Black, 1.0), null, p, 3, 3);
+    }
+
+    public static void DrawPath(DrawingContext context, double thickness, double opacity, Color color, List<Point> points)
+    {
+        if (points.Count < 2) return;
+
+        var prev = points.First();
+        foreach (var point in points.Skip(1))
+        {
+            context.DrawLine(new Pen(new SolidColorBrush(color, opacity), thickness), prev, point);
+            prev = point;
+        }
+    }
+
+    public Point CanvasToLocal(double x, double y)
+    {
+        var viewCenter = Bounds.Center;
+        var canvasOffset = new Point(OffsetX, OffsetY) + viewCenter;
+
+        return new Point(canvasOffset.X + x * ZoomX, canvasOffset.Y - y * ZoomY);
+    }
+
+    public override void Render(DrawingContext context)
+    {
+        DrawAxes(context, 3.5, 0.5, Colors.Gray);
+        DrawGrid(context, baseLineDistance, 2.4, 0.8, Colors.WhiteSmoke);
+
+        foreach (var spline in Splines?.Splines ?? [])
+        {
+            DrawPath(context, 1.0, 1.0, Colors.Black,
+                [.. CalculateSpline(GetLeftBorder(), GetRightBorder(), 5.0 / ZoomX,
+                [.. spline.Points.Select(p=>new Point(p.X,p.Y))], spline.Calculate)
+                    .Select(p => CanvasToLocal(p.X, p.Y))]);
+            foreach (var point in spline?.Points ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y));
+        }
+
+        base.Render(context);
+
+        Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
+    }
+
+    private static List<Point> Calculate(double left, double right, double step, Func<double, double> func)
+    {
+        List<double> x = [];
+        List<Point> points = [];
+
+        for (int i = 0; left + i * step < right; i++) x.Add(left + i * step);
+
+        x.ForEach(x => points.Add(new Point(x, func(x))));
+        return points;
+    }
+
+    private static List<Point> CalculateSpline(double left, double right, double step, List<Point> fixedPoints, Func<double, SplineCalculationResult> func)
+    {
+        List<double> x = [];
+        List<Point> points = [];
+
+        for (int i = 0; left + i * step < right; i++) x.Add(left + i * step);
+
+        x.ForEach(x =>
+        {
+            var r = func(x);
+            if (r.Exists) points.Add(new Point(x, r.Value));
+        });
+
+        points = [.. points.Concat(fixedPoints).OrderBy(x => x.X)];
+
+        return points;
+    }
 }
