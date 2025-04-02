@@ -123,6 +123,9 @@ public class GraphGridControl : UserControl
 
     const double baseLineDistance = 100.0;
 
+    private int GridLevel => (int)Math.Floor(Math.Log2(ZoomX));
+    private double GridSpacing => baseLineDistance * Math.Pow(2, -GridLevel);
+
     private void UpdateLog()
     {
         var bl = Bounds.Left;
@@ -131,8 +134,14 @@ public class GraphGridControl : UserControl
         var bb = Bounds.Bottom;
         var zs = ZoomX * baseLineDistance;
         var ls = Bounds.Width / (baseLineDistance * ZoomX);
+        var gl = GridLevel;
+        var gs = GridSpacing;
 
-        Log = $"Left: {bl:F2}, Right: {br:F2}, Top: {bt:F2}, Bottom: {bb:F2}, Space between lines: {zs:F2}, Lines: {ls:F2}\n LeftCoords: {GetLeftBorder():F1} RightCoords: {GetRightBorder():F1}";
+        Log = $"OffsetX: {OffsetX:F2} OffsetY: {OffsetY:F2} ZoomX: {ZoomX:F1} ZoomY: {ZoomY:F1}\n"
+            + $"Left: {bl:F2} Right: {br:F2} Top: {bt:F2} Bottom: {bb:F2}\n"
+            + $"Space between lines: {zs:F2} Lines: {ls:F2}\n"
+            + $"LeftCoords: {GetLeftBorder():F1} RightCoords: {GetRightBorder():F1}\n"
+            + $"GridLevel: {gl} GridSpacing: {gs}";
     }
 
     private double GetLeftBorder() => -(Bounds.Center.X + OffsetX) / ZoomX;
@@ -216,11 +225,8 @@ public class GraphGridControl : UserControl
         return new Point(canvasOffset.X + x * ZoomX, canvasOffset.Y - y * ZoomY);
     }
 
-    public override void Render(DrawingContext context)
+    public void DrawSplines(DrawingContext context)
     {
-        DrawAxes(context, 3.5, 0.5, Colors.Gray);
-        DrawGrid(context, baseLineDistance, 2.4, 0.8, Colors.WhiteSmoke);
-
         foreach (var spline in Splines?.Splines ?? [])
         {
             DrawPath(context, 1.0, 1.0, Colors.Black,
@@ -229,6 +235,14 @@ public class GraphGridControl : UserControl
                     .Select(p => CanvasToLocal(p.X, p.Y))]);
             foreach (var point in spline?.Points ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y));
         }
+    }
+
+    public override void Render(DrawingContext context)
+    {
+        DrawGrid(context, GridSpacing, 1.0, 0.8, Colors.Gray);
+        DrawGrid(context, GridSpacing / 5, 1.0, 0.8, Colors.WhiteSmoke);
+        DrawAxes(context, 1.0, 0.95, Colors.Black);
+        DrawSplines(context);
 
         base.Render(context);
 

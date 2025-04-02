@@ -49,7 +49,7 @@ public partial class MainWindowViewModel : ViewModelBase
         RemovePointCommand = new RelayCommand(RemovePoint);
         RebuildSplineCommand = new RelayCommand(RebuildSpline);
 
-        List<Vector2> points = [new(2, 1), new(5, 8), new(7, 3)];
+        // List<Vector2> points = [new(2, 1), new(5, 8), new(7, 3)];
         // List<SplineSegment> segments =
         // [
         //     new(points[0], points[1], [0, 1.5, -0.75, 0.25]),
@@ -58,7 +58,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         // Splines.Splines.Add(new Spline(points, segments));
 
-        Splines.Splines.Add(SplineBuilder.BuildQuadraticSpline(points)!);
+        // Splines.Splines.Add(SplineBuilder.BuildQuadraticSpline(points)!);
     }
 
 

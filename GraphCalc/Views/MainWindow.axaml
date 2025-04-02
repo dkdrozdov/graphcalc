@@ -85,14 +85,7 @@
                 </StackPanel>-->
                 <Grid ColumnDefinitions="50,*,50" RowDefinitions="Auto,12,Auto,12,*,12">
                     <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Orientation="Vertical">
-                        <!-- <TextBlock Text="R - Reset" />
-                        <TextBlock Text="Mouse Wheel - Zoom to Point" />
-                        <TextBlock Text="Mouse Left Button Down - Pan" />
-                        <TextBlock Text="{Binding #ZoomBorder.OffsetX}" />
-                        <TextBlock Text="{Binding #ZoomBorder.OffsetY}" />
-                        <TextBlock Text="{Binding #ZoomBorder.ZoomX}" />
-                        <TextBlock Text="{Binding #ZoomBorder.ZoomY}" />
-                        <TextBlock Text="{Binding #GraphGrid.Log}" /> -->
+                        <TextBlock Text="{Binding #GraphGrid.Log}" />
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal" />
                     <Panel Grid.Row="4" Grid.Column="1">
@@ -116,7 +109,7 @@
                                 Opacity="0.3"
                                 PanButton="Left"
                                 Stretch="None"
-                                ZoomSpeed="1.4">
+                                ZoomSpeed="1.1">
                                 <Rectangle Width="0" Height="0" Fill="Black" />
                             </paz:ZoomBorder>
                         </ScrollViewer>
