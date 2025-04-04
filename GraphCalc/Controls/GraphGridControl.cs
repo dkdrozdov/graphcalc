@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using GraphCalc.Models;
 using GraphCalc.ViewModels;
 using System.Linq;
+using System.Globalization;
+using Avalonia.Controls.Documents;
 
 namespace GraphCalc.Controls;
 
@@ -122,7 +124,7 @@ public class GraphGridControl : UserControl
     // }
 
     const double baseLineDistance = 100.0;
-
+    const double coordinateUnit = baseLineDistance;
     private int GridLevel => (int)Math.Floor(Math.Log2(ZoomX));
     private double GridSpacing => baseLineDistance * Math.Pow(2, -GridLevel);
 
@@ -140,12 +142,14 @@ public class GraphGridControl : UserControl
         Log = $"OffsetX: {OffsetX:F2} OffsetY: {OffsetY:F2} ZoomX: {ZoomX:F1} ZoomY: {ZoomY:F1}\n"
             + $"Left: {bl:F2} Right: {br:F2} Top: {bt:F2} Bottom: {bb:F2}\n"
             + $"Space between lines: {zs:F2} Lines: {ls:F2}\n"
-            + $"LeftCoords: {GetLeftBorder():F1} RightCoords: {GetRightBorder():F1}\n"
+            + $"LeftCoords: {GetLeftBorder():F1} RightCoords: {GetRightBorder():F1} TopCoords: {GetTopBorder():F1} BottomCoords: {GetBottomBorder():F1}\n"
             + $"GridLevel: {gl} GridSpacing: {gs}";
     }
 
     private double GetLeftBorder() => -(Bounds.Center.X + OffsetX) / ZoomX;
     private double GetRightBorder() => -(-Bounds.Center.X + OffsetX) / ZoomX;
+    private double GetTopBorder() => -(Bounds.Center.Y + OffsetY) / ZoomY;
+    private double GetBottomBorder() => -(Bounds.Center.Y + OffsetY) / ZoomY;
 
     private void DrawGrid(DrawingContext context, double gridLinesDistance, double thickness, double opacity, Color color)
     {
@@ -217,6 +221,8 @@ public class GraphGridControl : UserControl
         }
     }
 
+
+
     public Point CanvasToLocal(double x, double y)
     {
         var viewCenter = Bounds.Center;
@@ -241,12 +247,82 @@ public class GraphGridControl : UserControl
     {
         DrawGrid(context, GridSpacing, 1.0, 0.8, Colors.Gray);
         DrawGrid(context, GridSpacing / 5, 1.0, 0.8, Colors.WhiteSmoke);
-        DrawAxes(context, 1.0, 0.95, Colors.Black);
+        DrawAxes(context, 1.1, 1.0, Colors.Black);
+        DrawTicks(context, GridSpacing, 14, 1.0, Colors.Black);
         DrawSplines(context);
+
 
         base.Render(context);
 
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
+    }
+
+    private void DrawTicks(DrawingContext context, double gridSpacing, double size, double opacity, Color color)
+    {
+        var viewCenter = Bounds.Center;
+        var canvasOffset = new Point(OffsetX, OffsetY) + viewCenter;
+
+        {
+            var formattedText = new FormattedText(
+                    "0",
+                    CultureInfo.InvariantCulture,
+                    FlowDirection.LeftToRight,
+                    new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, FontWeight.DemiBold, FontStretch.Normal),
+                    size,
+                    new SolidColorBrush(Colors.Black, opacity));
+
+            var textSize = new Size(formattedText.Width, formattedText.Height);
+            context.DrawText(
+                formattedText,
+                new Point(Math.Clamp(canvasOffset.X - textSize.Width - 5.0, Bounds.Left, Bounds.Right - textSize.Width),
+                    Math.Clamp(canvasOffset.Y, Bounds.Top, Bounds.Bottom - textSize.Height)));
+        }
+
+        var gridLinesTransformedDistanceX = gridSpacing * ZoomX;
+        var verticalGridlinesOnViewX = Bounds.Width / gridLinesTransformedDistanceX;
+        var canvasLeft = -canvasOffset.X;
+
+        var leftIndex = (int)(canvasLeft / gridLinesTransformedDistanceX) + ((canvasLeft < 0) ? 0 : 1);
+
+        for (int i = leftIndex; i < leftIndex + verticalGridlinesOnViewX; i++)
+        {
+            var x = canvasOffset.X + i * gridLinesTransformedDistanceX;
+            var formattedText = new FormattedText(
+            $"{i * gridSpacing / coordinateUnit:G}",
+            CultureInfo.InvariantCulture,
+            FlowDirection.LeftToRight,
+            new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, FontWeight.DemiBold, FontStretch.Normal),
+            size,
+            new SolidColorBrush(Colors.Black, opacity));
+
+            var textSize = new Size(formattedText.Width, formattedText.Height);
+            if (i != 0) context.DrawText(formattedText, new Point(x - textSize.Width / 2.0,
+                Math.Clamp(canvasOffset.Y, Bounds.Top, Bounds.Bottom - textSize.Height)));
+        }
+
+        var gridLinesTransformedDistanceY = gridSpacing * ZoomY;
+        var verticalGridlinesOnViewY = Bounds.Height / gridLinesTransformedDistanceY;
+        var canvasTop = -canvasOffset.Y;
+
+
+        var topIndex = (int)(canvasTop / gridLinesTransformedDistanceY) + ((canvasTop < 0) ? 0 : 1);
+
+        for (int i = topIndex; i < topIndex + verticalGridlinesOnViewY; i++)
+        {
+            var y = canvasOffset.Y + i * gridLinesTransformedDistanceY;
+
+            var formattedText = new FormattedText(
+            $"{i * gridSpacing / coordinateUnit:G}",
+            CultureInfo.InvariantCulture,
+            FlowDirection.LeftToRight,
+            new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, FontWeight.DemiBold, FontStretch.Normal),
+            size,
+            new SolidColorBrush(Colors.Black, opacity));
+
+            var textSize = new Size(formattedText.Width, formattedText.Height);
+            if (i != 0) context.DrawText(formattedText,
+                new Point(Math.Clamp(canvasOffset.X - textSize.Width - 5.0, Bounds.Left, Bounds.Right - textSize.Width), y - textSize.Height / 2.0));
+        }
     }
 
     private static List<Point> Calculate(double left, double right, double step, Func<double, double> func)
