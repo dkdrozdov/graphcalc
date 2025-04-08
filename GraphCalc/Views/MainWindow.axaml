@@ -30,53 +30,57 @@
                         <Grid VerticalAlignment="Stretch" ColumnDefinitions="Auto, Auto, Auto">
                             <Button
                                 Grid.Column="0"
-                                VerticalAlignment="Stretch"
                                 HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 VerticalContentAlignment="Center"
                                 Command="{Binding AddPointCommand}"
                                 Content="+" />
                             <Button
                                 Grid.Column="1"
-                                VerticalAlignment="Stretch"
                                 HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 VerticalContentAlignment="Center"
                                 Command="{Binding RemovePointCommand}"
                                 Content="-" />
                             <Button
                                 Grid.Column="2"
-                                VerticalAlignment="Stretch"
                                 HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
                                 VerticalContentAlignment="Center"
                                 Command="{Binding RebuildSplineCommand}"
                                 Content="Build Spline" />
                         </Grid>
                     </Panel>
-                    <ListBox ItemsSource="{Binding SplinePoints}" SelectedItem="{Binding SelectedPoint}">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel>
-                                    <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="*,*">
-                                        <Label Grid.Row="0" Grid.Column="0" Content="X:" />
-                                        <TextBox
-                                            Grid.Row="1"
-                                            Grid.Column="0"
-                                            Margin="3"
-                                            HorizontalAlignment="Stretch"
-                                            Background="White"
-                                            Text="{Binding X, UpdateSourceTrigger=LostFocus}" />
-                                        <Label Grid.Row="0" Grid.Column="1" Content="Y:" />
-                                        <TextBox
-                                            Grid.Row="1"
-                                            Grid.Column="1"
-                                            Margin="3"
-                                            HorizontalAlignment="Stretch"
-                                            Background="White"
-                                            Text="{Binding Y, UpdateSourceTrigger=LostFocus}" />
-                                    </Grid>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <StackPanel>
+                        <Label Content="{Binding ExpressionLog}" />
+                        <TextBox HorizontalAlignment="Stretch" Text="{Binding UserExpression}" />
+                        <ListBox ItemsSource="{Binding SplinePoints}" SelectedItem="{Binding SelectedPoint}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="*,*">
+                                            <Label Grid.Row="0" Grid.Column="0" Content="X:" />
+                                            <TextBox
+                                                Grid.Row="1"
+                                                Grid.Column="0"
+                                                Margin="3"
+                                                HorizontalAlignment="Stretch"
+                                                Background="White"
+                                                Text="{Binding X, UpdateSourceTrigger=LostFocus}" />
+                                            <Label Grid.Row="0" Grid.Column="1" Content="Y:" />
+                                            <TextBox
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Margin="3"
+                                                HorizontalAlignment="Stretch"
+                                                Background="White"
+                                                Text="{Binding Y, UpdateSourceTrigger=LostFocus}" />
+                                        </Grid>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
                 </DockPanel>
             </Border>
 
@@ -91,6 +95,7 @@
                     <Panel Grid.Row="4" Grid.Column="1">
                         <c:GraphGridControl
                             Name="GraphGrid"
+                            Graphs="{Binding Graphs}"
                             OffsetX="{Binding #ZoomBorder.OffsetX}"
                             OffsetY="{Binding #ZoomBorder.OffsetY}"
                             Splines="{Binding Splines}"

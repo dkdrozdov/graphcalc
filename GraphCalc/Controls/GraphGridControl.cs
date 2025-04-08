@@ -17,6 +17,19 @@ namespace GraphCalc.Controls;
 
 public class GraphGridControl : UserControl
 {
+    public static readonly DirectProperty<GraphGridControl, DrawableGraphsViewModel?> GraphsProperty =
+        AvaloniaProperty.RegisterDirect<GraphGridControl, DrawableGraphsViewModel?>(
+            nameof(Graphs),
+            o => o.Graphs,
+            (o, v) => o.Graphs = v);
+
+    private DrawableGraphsViewModel? _graphs;
+
+    public DrawableGraphsViewModel? Graphs
+    {
+        get => _graphs;
+        set => SetAndRaise(GraphsProperty, ref _graphs, value);
+    }
 
     public static readonly DirectProperty<GraphGridControl, SplinesViewModel?> SplinesProperty =
         AvaloniaProperty.RegisterDirect<GraphGridControl, SplinesViewModel?>(
@@ -146,10 +159,10 @@ public class GraphGridControl : UserControl
             + $"GridLevel: {gl} GridSpacing: {gs}";
     }
 
-    private double GetLeftBorder() => -(Bounds.Center.X + OffsetX) / ZoomX;
-    private double GetRightBorder() => -(-Bounds.Center.X + OffsetX) / ZoomX;
-    private double GetTopBorder() => -(Bounds.Center.Y + OffsetY) / ZoomY;
-    private double GetBottomBorder() => -(Bounds.Center.Y + OffsetY) / ZoomY;
+    private double GetLeftBorder() => -(Bounds.Center.X + OffsetX) / (ZoomX * coordinateUnit);
+    private double GetRightBorder() => -(-Bounds.Center.X + OffsetX) / (ZoomX * coordinateUnit);
+    private double GetTopBorder() => -(Bounds.Center.Y + OffsetY) / (ZoomY * coordinateUnit);
+    private double GetBottomBorder() => -(Bounds.Center.Y + OffsetY) / (ZoomY * coordinateUnit);
 
     private void DrawGrid(DrawingContext context, double gridLinesDistance, double thickness, double opacity, Color color)
     {
@@ -228,7 +241,8 @@ public class GraphGridControl : UserControl
         var viewCenter = Bounds.Center;
         var canvasOffset = new Point(OffsetX, OffsetY) + viewCenter;
 
-        return new Point(canvasOffset.X + x * ZoomX, canvasOffset.Y - y * ZoomY);
+        return new Point(canvasOffset.X + x * ZoomX * coordinateUnit,
+                         canvasOffset.Y - y * ZoomY * coordinateUnit);
     }
 
     public void DrawSplines(DrawingContext context)
@@ -250,6 +264,7 @@ public class GraphGridControl : UserControl
         DrawAxes(context, 1.1, 1.0, Colors.Black);
         DrawTicks(context, GridSpacing, 14, 1.0, Colors.Black);
         DrawSplines(context);
+        DrawGraphs(context);
 
 
         base.Render(context);
@@ -257,11 +272,35 @@ public class GraphGridControl : UserControl
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
     }
 
+    private void DrawGraphs(DrawingContext context)
+    {
+        foreach (var graph in Graphs?.Graphs ?? [])
+        {
+            List<Point> points = [.. graph.PointsInBox((float)GetLeftBorder(),
+                                      (float)GetRightBorder(),
+                                      (float)GetBottomBorder(),
+                                      (float)GetTopBorder(),
+                                      (float)(0.1 / ZoomX ))
+                        .Select(p => CanvasToLocal(p.X, p.Y))
+                ];
+            DrawPath(context, 1.0, 1.0, Colors.Black, points);
+
+            foreach (var point in points)
+            {
+                context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, 0.3), 0.3),
+                        new Point(point.X, Bounds.Bottom),
+                        new Point(point.X, Bounds.Top)
+                    );
+            }
+        }
+    }
+
     private void DrawTicks(DrawingContext context, double gridSpacing, double size, double opacity, Color color)
     {
         var viewCenter = Bounds.Center;
         var canvasOffset = new Point(OffsetX, OffsetY) + viewCenter;
 
+        // 0 point
         {
             var formattedText = new FormattedText(
                     "0",
@@ -278,6 +317,7 @@ public class GraphGridControl : UserControl
                     Math.Clamp(canvasOffset.Y, Bounds.Top, Bounds.Bottom - textSize.Height)));
         }
 
+        // horizontal ticks
         var gridLinesTransformedDistanceX = gridSpacing * ZoomX;
         var verticalGridlinesOnViewX = Bounds.Width / gridLinesTransformedDistanceX;
         var canvasLeft = -canvasOffset.X;
@@ -300,11 +340,10 @@ public class GraphGridControl : UserControl
                 Math.Clamp(canvasOffset.Y, Bounds.Top, Bounds.Bottom - textSize.Height)));
         }
 
+        // vertical ticks
         var gridLinesTransformedDistanceY = gridSpacing * ZoomY;
         var verticalGridlinesOnViewY = Bounds.Height / gridLinesTransformedDistanceY;
         var canvasTop = -canvasOffset.Y;
-
-
         var topIndex = (int)(canvasTop / gridLinesTransformedDistanceY) + ((canvasTop < 0) ? 0 : 1);
 
         for (int i = topIndex; i < topIndex + verticalGridlinesOnViewY; i++)
@@ -312,7 +351,7 @@ public class GraphGridControl : UserControl
             var y = canvasOffset.Y + i * gridLinesTransformedDistanceY;
 
             var formattedText = new FormattedText(
-            $"{i * gridSpacing / coordinateUnit:G}",
+            $"{-i * gridSpacing / coordinateUnit:G}",
             CultureInfo.InvariantCulture,
             FlowDirection.LeftToRight,
             new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, FontWeight.DemiBold, FontStretch.Normal),

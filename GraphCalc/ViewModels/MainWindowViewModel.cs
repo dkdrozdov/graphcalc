@@ -1,25 +1,60 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Windows.Input;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GraphCalc.Models;
+using MathEvaluation;
+using MathEvaluation.Context;
+using MathEvaluation.Extensions;
 
 namespace GraphCalc.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty]
+    private string? expressionLog;
+    [ObservableProperty]
+    private string? _userExpression;
+    [ObservableProperty]
     private PointViewModel? _selectedPoint;
     public SplinesViewModel Splines { get; }
+    public DrawableGraphsViewModel Graphs { get; }
     public ObservableCollection<PointViewModel> SplinePoints { get; }
     public ICommand AddPointCommand { get; }
     public ICommand RemovePointCommand { get; }
     public ICommand RebuildSplineCommand { get; }
+
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+
+        base.OnPropertyChanged(e);
+
+        if (e.PropertyName == nameof(UserExpression))
+        {
+            Graphs.Graphs.Clear();
+
+            Dictionary<string, object> variables = [];
+
+            for (char i = 'a'; i <= 'z'; i++)
+            {
+                variables.Add(i.ToString(), new { Value = 0, Exists = false });
+            }
+
+            Graphs.Graphs.Add(new DrawableFunction(UserExpression ?? "", out string resultMessage));
+            ExpressionLog = resultMessage;
+
+        }
+    }
+
 
     public void RebuildSpline()
     {
@@ -43,6 +78,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel()
     {
         Splines = new();
+        Graphs = new();
         SplinePoints = [];
 
         AddPointCommand = new RelayCommand(AddPoint);
