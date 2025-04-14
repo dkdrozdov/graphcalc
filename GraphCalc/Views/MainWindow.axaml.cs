@@ -1,9 +1,13 @@
+using System;
 using System.Diagnostics;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using CommunityToolkit.Mvvm.Input;
 using GraphCalc.ViewModels;
 
 namespace GraphCalc.Views;
@@ -11,6 +15,7 @@ namespace GraphCalc.Views;
 public partial class MainWindow : Window
 {
     private readonly ZoomBorder? _zoomBorder;
+    private readonly Button? _resetViewButton;
     // public Matrix? Matrix => _zoomBorder?.Matrix;
 
     public MainWindow()
@@ -19,6 +24,13 @@ public partial class MainWindow : Window
         this.AttachDevTools();
 
         _zoomBorder = this.Find<ZoomBorder>("ZoomBorder");
+        _resetViewButton = this.Find<Button>("ResetViewButton");
+
+        if (_resetViewButton != null)
+        {
+            _resetViewButton.Click += ResetView;
+        }
+
         if (_zoomBorder != null)
         {
             _zoomBorder.KeyDown += ZoomBorder_KeyDown;
@@ -27,12 +39,22 @@ public partial class MainWindow : Window
         }
     }
 
+    private void ResetView(object? sender, RoutedEventArgs e)
+    {
+        ResetView();
+    }
+
+    public void ResetView()
+    {
+        _zoomBorder?.ResetMatrix();
+    }
+
     private void ZoomBorder_KeyDown(object? sender, KeyEventArgs e)
     {
         switch (e.Key)
         {
             case Key.R:
-                _zoomBorder?.ResetMatrix();
+                ResetView();
                 break;
         }
     }

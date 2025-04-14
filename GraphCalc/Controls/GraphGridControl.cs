@@ -272,6 +272,8 @@ public class GraphGridControl : UserControl
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
     }
 
+    const double graphResolution = 0.05;
+
     private void DrawGraphs(DrawingContext context)
     {
         foreach (var graph in Graphs?.Graphs ?? [])
@@ -280,18 +282,18 @@ public class GraphGridControl : UserControl
                                       (float)GetRightBorder(),
                                       (float)GetBottomBorder(),
                                       (float)GetTopBorder(),
-                                      (float)(0.1 / ZoomX ))
+                                      (float)(graphResolution / ZoomX ))
                         .Select(p => CanvasToLocal(p.X, p.Y))
                 ];
             DrawPath(context, 1.0, 1.0, Colors.Black, points);
 
-            foreach (var point in points)
-            {
-                context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, 0.3), 0.3),
-                        new Point(point.X, Bounds.Bottom),
-                        new Point(point.X, Bounds.Top)
-                    );
-            }
+            // foreach (var point in points)
+            // {
+            //     context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, 0.3), 0.3),
+            //             new Point(point.X, Bounds.Bottom),
+            //             new Point(point.X, Bounds.Top)
+            //         );
+            // }
         }
     }
 

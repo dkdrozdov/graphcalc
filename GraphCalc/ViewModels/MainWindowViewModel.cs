@@ -55,7 +55,6 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
-
     public void RebuildSpline()
     {
         Splines.Splines.Clear();
@@ -84,7 +83,6 @@ public partial class MainWindowViewModel : ViewModelBase
         AddPointCommand = new RelayCommand(AddPoint);
         RemovePointCommand = new RelayCommand(RemovePoint);
         RebuildSplineCommand = new RelayCommand(RebuildSpline);
-
         // List<Vector2> points = [new(2, 1), new(5, 8), new(7, 3)];
         // List<SplineSegment> segments =
         // [
