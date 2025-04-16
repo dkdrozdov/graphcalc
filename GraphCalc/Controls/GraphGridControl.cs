@@ -2,16 +2,12 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia;
 using Avalonia.Threading;
-using System.ComponentModel;
-using Avalonia.Interactivity;
 using System;
-using Avalonia.Metadata;
 using System.Collections.Generic;
 using GraphCalc.Models;
 using GraphCalc.ViewModels;
 using System.Linq;
 using System.Globalization;
-using Avalonia.Controls.Documents;
 
 namespace GraphCalc.Controls;
 

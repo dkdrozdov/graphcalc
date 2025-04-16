@@ -1,9 +1,5 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Numerics;
-using Avalonia.Animation;
-using CommunityToolkit.Mvvm.ComponentModel;
-using GraphCalc.Models;
 
 namespace GraphCalc.Models;
 

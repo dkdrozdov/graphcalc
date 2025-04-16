@@ -1,14 +1,8 @@
-using System;
-using System.Diagnostics;
-using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using CommunityToolkit.Mvvm.Input;
-using GraphCalc.ViewModels;
 
 namespace GraphCalc.Views;
 

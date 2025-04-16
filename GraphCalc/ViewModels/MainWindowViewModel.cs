@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices;
 using System.Windows.Input;
-using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GraphCalc.Models;
-using MathEvaluation;
-using MathEvaluation.Context;
-using MathEvaluation.Extensions;
 
 namespace GraphCalc.ViewModels;
 
