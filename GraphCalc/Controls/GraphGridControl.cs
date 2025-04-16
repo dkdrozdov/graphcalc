@@ -272,7 +272,7 @@ public class GraphGridControl : UserControl
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
     }
 
-    const double graphResolution = 0.05;
+    double GraphResolution { get => 0.05 * Math.Sqrt(ZoomX + 1); }
 
     private void DrawGraphs(DrawingContext context)
     {
@@ -282,7 +282,7 @@ public class GraphGridControl : UserControl
                                       (float)GetRightBorder(),
                                       (float)GetBottomBorder(),
                                       (float)GetTopBorder(),
-                                      (float)(graphResolution / ZoomX ))
+                                      (float)(GraphResolution / ZoomX ))
                         .Select(p => CanvasToLocal(p.X, p.Y))
                 ];
             DrawPath(context, 1.0, 1.0, Colors.Black, points);

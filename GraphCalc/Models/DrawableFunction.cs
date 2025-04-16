@@ -4,6 +4,8 @@ using System.Linq;
 using System.Numerics;
 using MathEvaluation;
 using MathEvaluation.Context;
+using MathEvaluation.Extensions;
+using MathNet.Numerics;
 
 namespace GraphCalc.Models;
 
@@ -37,12 +39,16 @@ public class DrawableFunction : IDrawableGraph
             return null;
         }
 
-        var context = new MathContext();
+        var context = new ScientificMathContext();
 
-        context.BindFunction(Math.Sqrt);
-        context.BindFunction(d => Math.Log(d), "ln");
-        context.BindFunction(d => Math.Sin(d), "sin");
-        context.BindFunction(d => Math.Cos(d), "cos");
+        context.BindFunction(Math.Sqrt, "sqrt");
+        context.BindFunction((double d) => Math.Floor(d), "floor");
+        context.BindOperandOperator(d => SpecialFunctions.Gamma(d + 1), '!', isProcessingLeft: true);
+
+        // context.BindConstant(Math.PI)
+        // context.BindFunction(d => Math.Log(d), "ln");
+        // context.BindFunction(Math.Sin, "sin");
+        // context.BindFunction(Math.Cos, "cos");
 
         using var expression = new MathExpression(ExpressionString ?? "", context);
 
@@ -51,19 +57,19 @@ public class DrawableFunction : IDrawableGraph
         {
             var result = expression.Evaluate(new { x = 1 });
 
-            Console.WriteLine($"{ExpressionString} -> x=1: {result}");
+            // Console.WriteLine($"{ExpressionString} -> x=1: {result}");
             resultMessage = $"";
         }
         catch (Exception exception)
         {
-            if (exception is MathExpressionException expressionException)
-            {
-                Console.WriteLine($"{expressionException}\n");
-            }
-            Console.WriteLine($"{exception}\n Data:");
+            // if (exception is MathExpressionException expressionException)
+            // {
+            // Console.WriteLine($"{expressionException}\n");
+            // }
+            // Console.WriteLine($"{exception}\n Data:");
             foreach (var item in exception.Data)
             {
-                Console.WriteLine($"{item}\n");
+                // Console.WriteLine($"{item}\n");
                 resultMessage = $"Can't resolve symbol: {exception.Data["mathString"]}";
             }
             return null;
@@ -79,11 +85,13 @@ public class DrawableFunction : IDrawableGraph
         List<float> grid = [];
         for (int i = 0; x1 + i * step < x2; i++) grid.Add(x1 + i * step);
 
+        var compiledExpression = Expression.Compile(new { x = 0.0f });
+
         grid.ForEach(tick =>
         {
             try
             {
-                var result = Expression.Evaluate(new { x = tick });
+                var result = compiledExpression(new { x = tick });
                 points.Add(new Vector2(tick, (float)result));
             }
             catch (Exception exception)
