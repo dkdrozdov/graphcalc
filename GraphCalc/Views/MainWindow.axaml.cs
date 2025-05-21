@@ -1,8 +1,10 @@
+using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Markup.Xaml;
 
 namespace GraphCalc.Views;
 
@@ -31,6 +33,11 @@ public partial class MainWindow : Window
 
             _zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
         }
+    }
+
+    private void InitializeComponent()
+    {
+        AvaloniaXamlLoader.Load(this);
     }
 
     private void ResetView(object? sender, RoutedEventArgs e)

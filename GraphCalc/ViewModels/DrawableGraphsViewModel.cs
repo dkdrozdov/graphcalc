@@ -6,5 +6,6 @@ namespace GraphCalc.ViewModels;
 
 public class DrawableGraphsViewModel : ObservableObject
 {
-    public ObservableCollection<IDrawableGraph> Graphs { get; set; } = [];
+
+    public ObservableCollection<DrawableGraphViewModel> Graphs { get; set; } = [];
 }

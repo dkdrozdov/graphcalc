@@ -218,14 +218,14 @@ public class GraphGridControl : UserControl
         context.DrawEllipse(new SolidColorBrush(Colors.Black, 1.0), null, p, 3, 3);
     }
 
-    public static void DrawPath(DrawingContext context, double thickness, double opacity, Color color, List<Point> points)
+    public static void DrawPath(DrawingContext context, double thickness, double opacity, Color color, List<Point> points, IBrush brush)
     {
         if (points.Count < 2) return;
 
         var prev = points.First();
         foreach (var point in points.Skip(1))
         {
-            context.DrawLine(new Pen(new SolidColorBrush(color, opacity), thickness), prev, point);
+            context.DrawLine(new Pen(brush, thickness), prev, point);
             prev = point;
         }
     }
@@ -241,55 +241,40 @@ public class GraphGridControl : UserControl
                          canvasOffset.Y - y * ZoomY * coordinateUnit);
     }
 
-    public void DrawSplines(DrawingContext context)
-    {
-        foreach (var spline in Splines?.Splines ?? [])
-        {
-            DrawPath(context, 1.0, 1.0, Colors.Black,
-                [.. CalculateSpline(GetLeftBorder(), GetRightBorder(), 5.0 / ZoomX,
-                [.. spline.Points.Select(p=>new Point(p.X,p.Y))], spline.Calculate)
-                    .Select(p => CanvasToLocal(p.X, p.Y))]);
-            foreach (var point in spline?.Points ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y));
-        }
-    }
-
     public override void Render(DrawingContext context)
     {
         DrawGrid(context, GridSpacing, 1.0, 0.8, Colors.Gray);
         DrawGrid(context, GridSpacing / 5, 1.0, 0.8, Colors.WhiteSmoke);
         DrawAxes(context, 1.1, 1.0, Colors.Black);
         DrawTicks(context, GridSpacing, 14, 1.0, Colors.Black);
-        DrawSplines(context);
-        DrawGraphs(context);
-
+        DrawGraphs(context, Graphs);
 
         base.Render(context);
 
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
     }
 
-    double GraphResolution { get => 0.05 * Math.Sqrt(ZoomX + 1); }
+    double GraphResolution { get => 0.025 * Math.Sqrt(ZoomX + 1); }
 
-    private void DrawGraphs(DrawingContext context)
+    private void DrawGraphs(DrawingContext context, DrawableGraphsViewModel? graphs)
     {
-        foreach (var graph in Graphs?.Graphs ?? [])
+        if (graphs == null) return;
+
+        foreach (var graphViewModel in graphs?.Graphs.Where(x => !x.IsHidden) ?? [])
         {
-            List<Point> points = [.. graph.PointsInBox((float)GetLeftBorder(),
-                                      (float)GetRightBorder(),
-                                      (float)GetBottomBorder(),
-                                      (float)GetTopBorder(),
-                                      (float)(GraphResolution / ZoomX ))
+            var graph = graphViewModel.Graph;
+            var lineWidth = graphViewModel.LineWidth;
+            var lineOpacity = graphViewModel.LineOpacity;
+            var brush = graphViewModel.Brush;
+            List<Point> points = [.. graph.PointsInBox(GetLeftBorder(),
+                                      GetRightBorder(),
+                                      GetBottomBorder(),
+                                      GetTopBorder(),
+                                      GraphResolution / ZoomX )
                         .Select(p => CanvasToLocal(p.X, p.Y))
                 ];
-            DrawPath(context, 1.0, 1.0, Colors.Black, points);
-
-            // foreach (var point in points)
-            // {
-            //     context.DrawLine(new Pen(new SolidColorBrush(Colors.Red, 0.3), 0.3),
-            //             new Point(point.X, Bounds.Bottom),
-            //             new Point(point.X, Bounds.Top)
-            //         );
-            // }
+            DrawPath(context, lineWidth, lineOpacity, Colors.Black, points, brush);
+            foreach (var point in graph.SpecialPoints() ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y));
         }
     }
 
@@ -360,34 +345,5 @@ public class GraphGridControl : UserControl
             if (i != 0) context.DrawText(formattedText,
                 new Point(Math.Clamp(canvasOffset.X - textSize.Width - 5.0, Bounds.Left, Bounds.Right - textSize.Width), y - textSize.Height / 2.0));
         }
-    }
-
-    private static List<Point> Calculate(double left, double right, double step, Func<double, double> func)
-    {
-        List<double> x = [];
-        List<Point> points = [];
-
-        for (int i = 0; left + i * step < right; i++) x.Add(left + i * step);
-
-        x.ForEach(x => points.Add(new Point(x, func(x))));
-        return points;
-    }
-
-    private static List<Point> CalculateSpline(double left, double right, double step, List<Point> fixedPoints, Func<double, SplineCalculationResult> func)
-    {
-        List<double> x = [];
-        List<Point> points = [];
-
-        for (int i = 0; left + i * step < right; i++) x.Add(left + i * step);
-
-        x.ForEach(x =>
-        {
-            var r = func(x);
-            if (r.Exists) points.Add(new Point(x, r.Value));
-        });
-
-        points = [.. points.Concat(fixedPoints).OrderBy(x => x.X)];
-
-        return points;
     }
 }

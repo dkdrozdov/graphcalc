@@ -13,40 +13,14 @@ namespace GraphCalc.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     [ObservableProperty]
-    private string? expressionLog;
-    [ObservableProperty]
-    private string? _userExpression;
-    [ObservableProperty]
     private PointViewModel? _selectedPoint;
     public SplinesViewModel Splines { get; }
     public DrawableGraphsViewModel Graphs { get; }
     public ObservableCollection<PointViewModel> SplinePoints { get; }
     public ICommand AddPointCommand { get; }
+    public ICommand AddFunctionCommand { get; }
     public ICommand RemovePointCommand { get; }
     public ICommand RebuildSplineCommand { get; }
-
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-
-        base.OnPropertyChanged(e);
-
-        if (e.PropertyName == nameof(UserExpression))
-        {
-            Graphs.Graphs.Clear();
-
-            Dictionary<string, object> variables = [];
-
-            for (char i = 'a'; i <= 'z'; i++)
-            {
-                variables.Add(i.ToString(), new { Value = 0, Exists = false });
-            }
-
-            Graphs.Graphs.Add(new DrawableFunction(UserExpression ?? "", out string resultMessage));
-            ExpressionLog = resultMessage;
-
-        }
-    }
 
     public void RebuildSpline()
     {
@@ -59,6 +33,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         SplinePoints.Add(new());
     }
+    public void AddFunction()
+    {
+        Graphs.Graphs.Add(new(new DrawableFunction("", out _), Graphs));
+    }
+
 
     public void RemovePoint()
     {
@@ -71,9 +50,11 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         Splines = new();
         Graphs = new();
+        Graphs.Graphs.Add(new(new DrawableFunction("", out _), Graphs));
         SplinePoints = [];
 
         AddPointCommand = new RelayCommand(AddPoint);
+        AddFunctionCommand = new RelayCommand(AddFunction);
         RemovePointCommand = new RelayCommand(RemovePoint);
         RebuildSplineCommand = new RelayCommand(RebuildSpline);
         // List<Vector2> points = [new(2, 1), new(5, 8), new(7, 3)];

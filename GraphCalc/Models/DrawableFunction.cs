@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using MathEvaluation;
 using MathEvaluation.Context;
@@ -75,13 +76,14 @@ public class DrawableFunction : IDrawableGraph
         return expression;
     }
 
-    public List<Vector2> PointsInBox(float x1, float x2, float y1, float y2, float step)
+    public List<Vector2> PointsInBox(double x1, double x2, double y1, double y2, double step)
     {
         List<Vector2> points = [];
         if (Expression == null) return points;
 
-        List<float> grid = [];
+        List<double> grid = [];
         for (int i = 0; x1 + i * step < x2; i++) grid.Add(x1 + i * step);
+        grid.Add(x2);
 
         var compiledExpression = Expression.Compile(new { x = 0.0f });
 
@@ -89,8 +91,8 @@ public class DrawableFunction : IDrawableGraph
         {
             try
             {
-                var result = compiledExpression(new { x = tick });
-                points.Add(new Vector2(tick, (float)result));
+                var result = compiledExpression(new { x = (float)tick });
+                points.Add(new Vector2((float)tick, (float)result));
             }
             catch (Exception exception)
             {
@@ -101,4 +103,5 @@ public class DrawableFunction : IDrawableGraph
         return points;
     }
 
+    public List<Vector2> SpecialPoints() => [];
 }

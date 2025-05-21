@@ -14,6 +14,36 @@
     Icon="/Assets/avalonia-logo.ico"
     mc:Ignorable="d">
 
+    <Window.Resources>
+        <StreamGeometry x:Key="settings_regular">M14 9.50006C11.5147 9.50006 9.5 11.5148 9.5 14.0001C9.5 16.4853 11.5147 18.5001 14 18.5001C15.3488 18.5001 16.559 17.9066 17.3838 16.9666C18.0787 16.1746 18.5 15.1365 18.5 14.0001C18.5 13.5401 18.431 13.0963 18.3028 12.6784C17.7382 10.8381 16.0253 9.50006 14 9.50006ZM11 14.0001C11 12.3432 12.3431 11.0001 14 11.0001C15.6569 11.0001 17 12.3432 17 14.0001C17 15.6569 15.6569 17.0001 14 17.0001C12.3431 17.0001 11 15.6569 11 14.0001Z M21.7093 22.3948L19.9818 21.6364C19.4876 21.4197 18.9071 21.4515 18.44 21.7219C17.9729 21.9924 17.675 22.4693 17.6157 23.0066L17.408 24.8855C17.3651 25.273 17.084 25.5917 16.7055 25.682C14.9263 26.1061 13.0725 26.1061 11.2933 25.682C10.9148 25.5917 10.6336 25.273 10.5908 24.8855L10.3834 23.0093C10.3225 22.4731 10.0112 21.9976 9.54452 21.7281C9.07783 21.4586 8.51117 21.4269 8.01859 21.6424L6.29071 22.4009C5.93281 22.558 5.51493 22.4718 5.24806 22.1859C4.00474 20.8536 3.07924 19.2561 2.54122 17.5137C2.42533 17.1384 2.55922 16.7307 2.8749 16.4977L4.40219 15.3703C4.83721 15.0501 5.09414 14.5415 5.09414 14.0007C5.09414 13.4598 4.83721 12.9512 4.40162 12.6306L2.87529 11.5051C2.55914 11.272 2.42513 10.8638 2.54142 10.4882C3.08038 8.74734 4.00637 7.15163 5.24971 5.82114C5.51684 5.53528 5.93492 5.44941 6.29276 5.60691L8.01296 6.36404C8.50793 6.58168 9.07696 6.54881 9.54617 6.27415C10.0133 6.00264 10.3244 5.52527 10.3844 4.98794L10.5933 3.11017C10.637 2.71803 10.9245 2.39704 11.3089 2.31138C12.19 2.11504 13.0891 2.01071 14.0131 2.00006C14.9147 2.01047 15.8128 2.11485 16.6928 2.31149C17.077 2.39734 17.3643 2.71823 17.4079 3.11017L17.617 4.98937C17.7116 5.85221 18.4387 6.50572 19.3055 6.50663C19.5385 6.507 19.769 6.45838 19.9843 6.36294L21.7048 5.60568C22.0626 5.44818 22.4807 5.53405 22.7478 5.81991C23.9912 7.1504 24.9172 8.74611 25.4561 10.487C25.5723 10.8623 25.4386 11.2703 25.1228 11.5035L23.5978 12.6297C23.1628 12.95 22.9 13.4586 22.9 13.9994C22.9 14.5403 23.1628 15.0489 23.5988 15.3698L25.1251 16.4965C25.441 16.7296 25.5748 17.1376 25.4586 17.5131C24.9198 19.2536 23.9944 20.8492 22.7517 22.1799C22.4849 22.4657 22.0671 22.5518 21.7093 22.3948ZM16.263 22.1966C16.4982 21.4685 16.9889 20.8288 17.6884 20.4238C18.5702 19.9132 19.6536 19.8547 20.5841 20.2627L21.9281 20.8526C22.791 19.8538 23.4593 18.7013 23.8981 17.4552L22.7095 16.5778L22.7086 16.5771C21.898 15.98 21.4 15.0277 21.4 13.9994C21.4 12.9719 21.8974 12.0195 22.7073 11.4227L22.7085 11.4218L23.8957 10.545C23.4567 9.2988 22.7881 8.14636 21.9248 7.1477L20.5922 7.73425L20.5899 7.73527C20.1844 7.91463 19.7472 8.00722 19.3039 8.00663C17.6715 8.00453 16.3046 6.77431 16.1261 5.15465L16.1259 5.15291L15.9635 3.69304C15.3202 3.57328 14.6677 3.50872 14.013 3.50017C13.3389 3.50891 12.6821 3.57367 12.0377 3.69328L11.8751 5.15452C11.7625 6.16272 11.1793 7.05909 10.3019 7.56986C9.41937 8.0856 8.34453 8.14844 7.40869 7.73694L6.07273 7.14893C5.20949 8.14751 4.54092 9.29983 4.10196 10.5459L5.29181 11.4233C6.11115 12.0269 6.59414 12.9837 6.59414 14.0007C6.59414 15.0173 6.11142 15.9742 5.29237 16.5776L4.10161 17.4566C4.54002 18.7044 5.2085 19.8585 6.07205 20.8587L7.41742 20.2682C8.34745 19.8613 9.41573 19.9215 10.2947 20.4292C11.174 20.937 11.7593 21.832 11.8738 22.84L11.8744 22.8445L12.0362 24.3088C13.3326 24.5638 14.6662 24.5638 15.9626 24.3088L16.1247 22.8418C16.1491 22.6217 16.1955 22.4055 16.263 22.1966Z</StreamGeometry>
+        <StreamGeometry x:Key="remove_regular">M3.7547787,12.4995322 L20.2466903,12.4995322 C20.6609039,12.4995322 20.9966903,12.1637458 20.9966903,11.7495322 C20.9966903,11.3353187 20.6609039,10.9995322 20.2466903,10.9995322 L3.7547787,10.9995322 C3.34056514,10.9995322 3.0047787,11.3353187 3.0047787,11.7495322 C3.0047787,12.1637458 3.34056514,12.4995322 3.7547787,12.4995322 Z</StreamGeometry>
+        <StreamGeometry x:Key="add_regular">M14.5,13 L14.5,3.75378577 C14.5,3.33978577 14.164,3.00378577 13.75,3.00378577 C13.336,3.00378577 13,3.33978577 13,3.75378577 L13,13 L3.75387573,13 C3.33987573,13 3.00387573,13.336 3.00387573,13.75 C3.00387573,14.164 3.33987573,14.5 3.75387573,14.5 L13,14.5 L13,23.7523651 C13,24.1663651 13.336,24.5023651 13.75,24.5023651 C14.164,24.5023651 14.5,24.1663651 14.5,23.7523651 L14.5,14.5 L23.7498262,14.5030754 C24.1638262,14.5030754 24.4998262,14.1670754 24.4998262,13.7530754 C24.4998262,13.3390754 24.1638262,13.0030754 23.7498262,13.0030754 L14.5,13 Z</StreamGeometry>
+        <StreamGeometry x:Key="eye_show_regular">M12,9.0046246 C14.209139,9.0046246 16,10.7954856 16,13.0046246 C16,15.2137636 14.209139,17.0046246 12,17.0046246 C9.790861,17.0046246 8,15.2137636 8,13.0046246 C8,10.7954856 9.790861,9.0046246 12,9.0046246 Z M12,10.5046246 C10.6192881,10.5046246 9.5,11.6239127 9.5,13.0046246 C9.5,14.3853365 10.6192881,15.5046246 12,15.5046246 C13.3807119,15.5046246 14.5,14.3853365 14.5,13.0046246 C14.5,11.6239127 13.3807119,10.5046246 12,10.5046246 Z M12,5.5 C16.613512,5.5 20.5960869,8.65000641 21.7011157,13.0643865 C21.8017,13.4662019 21.557504,13.8734775 21.1556885,13.9740618 C20.7538731,14.0746462 20.3465976,13.8304502 20.2460132,13.4286347 C19.3071259,9.67795854 15.9213644,7 12,7 C8.07693257,7 4.69009765,9.68026417 3.75285786,13.4331499 C3.65249525,13.8350208 3.24535455,14.0794416 2.84348365,13.979079 C2.44161275,13.8787164 2.19719198,13.4715757 2.29755459,13.0697048 C3.4006459,8.65271806 7.38448293,5.5 12,5.5 Z</StreamGeometry>
+        <StreamGeometry x:Key="eye_hide_regular">M2.21967 2.21967C1.9534 2.48594 1.9292 2.9026 2.14705 3.19621L2.21967 3.28033L6.25424 7.3149C4.33225 8.66437 2.89577 10.6799 2.29888 13.0644C2.1983 13.4662 2.4425 13.8735 2.84431 13.9741C3.24613 14.0746 3.6534 13.8305 3.75399 13.4286C4.28346 11.3135 5.59112 9.53947 7.33416 8.39452L9.14379 10.2043C8.43628 10.9258 8 11.9143 8 13.0046C8 15.2138 9.79086 17.0046 12 17.0046C13.0904 17.0046 14.0788 16.5683 14.8004 15.8608L20.7197 21.7803C21.0126 22.0732 21.4874 22.0732 21.7803 21.7803C22.0466 21.5141 22.0708 21.0974 21.8529 20.8038L21.7803 20.7197L15.6668 14.6055L15.668 14.604L14.4679 13.4061L11.598 10.5368L11.6 10.536L8.71877 7.65782L8.72 7.656L7.58672 6.52549L3.28033 2.21967C2.98744 1.92678 2.51256 1.92678 2.21967 2.21967ZM10.2041 11.2655L13.7392 14.8006C13.2892 15.2364 12.6759 15.5046 12 15.5046C10.6193 15.5046 9.5 14.3853 9.5 13.0046C9.5 12.3287 9.76824 11.7154 10.2041 11.2655ZM12 5.5C10.9997 5.5 10.0291 5.64807 9.11109 5.925L10.3481 7.16119C10.8839 7.05532 11.4364 7 12 7C15.9231 7 19.3099 9.68026 20.2471 13.4332C20.3475 13.835 20.7546 14.0794 21.1565 13.9791C21.5584 13.8787 21.8028 13.4716 21.7024 13.0697C20.5994 8.65272 16.6155 5.5 12 5.5ZM12.1947 9.00928L15.996 12.81C15.8942 10.7531 14.2472 9.10764 12.1947 9.00928Z</StreamGeometry>
+        <StreamGeometry x:Key="data_line_regular">M19,4.5 C18.1716,4.5 17.5,5.17157 17.5,6 C17.5,6.82843 18.1716,7.5 19,7.5 C19.8284,7.5 20.5,6.82843 20.5,6 C20.5,5.17157 19.8284,4.5 19,4.5 Z M16,6 C16,4.34315 17.3431,3 19,3 C20.6569,3 22,4.34315 22,6 C22,7.65685 20.6569,9 19,9 C18.8382,9 18.6794,8.98719 18.5246,8.96254 L16.4865,12.3209 C16.8107,12.8001 17,13.3779 17,14 C17,15.6569 15.6569,17 14,17 C13.0971,17 12.2874,16.6012 11.7374,15.9701 L7.99584,17.8406 C7.9986,17.8934 8,17.9465 8,18 C8,19.6569 6.65685,21 5,21 C3.34315,21 2,19.6569 2,18 C2,16.3431 3.34315,15 5,15 C6.06616,15 7.00242,15.5562 7.5345,16.3942 L11.066,14.6287 C11.0228,14.426 11,14.2156 11,14 C11,12.3431 12.3431,11 14,11 C14.4823,11 14.938,11.1138 15.3417,11.316 L17.1395,8.35358 C16.4454,7.80411 16,6.95406 16,6 Z M14,12.5 C13.1716,12.5 12.5,13.1716 12.5,14 C12.5,14.8284 13.1716,15.5 14,15.5 C14.8284,15.5 15.5,14.8284 15.5,14 C15.5,13.1716 14.8284,12.5 14,12.5 Z M5,16.5 C4.17157,16.5 3.5,17.1716 3.5,18 C3.5,18.8284 4.17157,19.5 5,19.5 C5.82843,19.5 6.5,18.8284 6.5,18 C6.5,17.1716 5.82843,16.5 5,16.5 Z</StreamGeometry>
+        <StreamGeometry x:Key="math_formula_regular">M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z</StreamGeometry>
+    </Window.Resources>
+
+    <Window.Styles>
+        <Style Selector="ToggleButton PathIcon.show-on">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="ToggleButton:checked PathIcon.show-on">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="ToggleButton PathIcon.show-off">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="ToggleButton:checked PathIcon.show-off">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="ToggleButton.gray">
+            <Style Selector="^:checked /template/ ContentPresenter#PART_ContentPresenter">
+                <Setter Property="Background" Value="Gray" />
+            </Style>
+        </Style>
+    </Window.Styles>
+
     <Design.DataContext>
         <!--
             This only sets the DataContext for the previewer in an IDE,
@@ -23,7 +53,7 @@
     </Design.DataContext>
 
     <Panel Background="GhostWhite">
-        <Grid ColumnDefinitions="*,3*">
+        <Grid ColumnDefinitions="4*,9*">
             <Border Grid.Column="0" Margin="10" Background="White">
                 <DockPanel>
                     <Panel Height="35" Background="WhiteSmoke" DockPanel.Dock="Bottom">
@@ -51,36 +81,164 @@
                                 Content="Build Spline" />
                         </Grid>
                     </Panel>
-                    <StackPanel>
-                        <Label Content="{Binding ExpressionLog}" />
-                        <TextBox HorizontalAlignment="Stretch" Text="{Binding UserExpression}" />
-                        <ListBox ItemsSource="{Binding SplinePoints}" SelectedItem="{Binding SelectedPoint}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel>
-                                        <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="*,*">
-                                            <Label Grid.Row="0" Grid.Column="0" Content="X:" />
-                                            <TextBox
-                                                Grid.Row="1"
-                                                Grid.Column="0"
-                                                Margin="3"
-                                                HorizontalAlignment="Stretch"
-                                                Background="White"
-                                                Text="{Binding X, UpdateSourceTrigger=LostFocus}" />
-                                            <Label Grid.Row="0" Grid.Column="1" Content="Y:" />
-                                            <TextBox
-                                                Grid.Row="1"
-                                                Grid.Column="1"
-                                                Margin="3"
-                                                HorizontalAlignment="Stretch"
-                                                Background="White"
-                                                Text="{Binding Y, UpdateSourceTrigger=LostFocus}" />
+                    <ScrollViewer>
+                        <StackPanel Margin="8,8,18,8">
+                            <ItemsControl ItemsSource="{Binding Graphs.Graphs}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0,0,0,18" RowDefinitions="*, Auto">
+                                            <StackPanel Grid.Row="0" FlowDirection="RightToLeft" Orientation="Horizontal">
+                                                <Button VerticalAlignment="Top" VerticalContentAlignment="Center" Command="{Binding RemoveCommand}">
+                                                    <PathIcon Data="{StaticResource remove_regular}" />
+                                                </Button>
+                                                <ToggleButton Name="SettingsToggleButton" Classes="gray" IsChecked="False">
+                                                    <Panel>
+                                                        <PathIcon Data="{StaticResource settings_regular}" />
+                                                    </Panel>
+                                                </ToggleButton>
+                                                <ToggleButton Name="ShowToggleButton" Classes="gray" IsChecked="{Binding IsHidden}">
+                                                    <Panel>
+                                                        <PathIcon Foreground="{Binding Brush}" Classes="show-on" Data="{StaticResource eye_hide_regular}" />
+                                                        <PathIcon Foreground="{Binding Brush}" Classes="show-off" Data="{StaticResource eye_show_regular}" />
+                                                    </Panel>
+                                                </ToggleButton>
+                                            </StackPanel>
+                                            <StackPanel Grid.Row="1">
+                                                <TextBox Height="20" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Text="{Binding UserExpression}" />
+                                                <Label Content="{Binding ExpressionLog}" IsVisible="{Binding ExpressionLogNotEmpty}" />
+                                                <Grid ColumnDefinitions="Auto, *" IsVisible="{Binding #SettingsToggleButton.IsChecked}" RowDefinitions="Auto,Auto">
+                                                    <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Thickness: " />
+                                                    <Slider
+                                                        Grid.Row="0"
+                                                        Grid.Column="1"
+                                                        IsSnapToTickEnabled="True"
+                                                        Maximum="5"
+                                                        Minimum="0"
+                                                        TickFrequency="0.5"
+                                                        Value="{Binding LineWidth}" />
+                                                    <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Opacity: " />
+                                                    <Slider
+                                                        Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Maximum="1"
+                                                        Minimum="0"
+                                                        Value="{Binding LineOpacity}" />
+                                                </Grid>
+                                                <UniformGrid
+                                                    Height="30"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center"
+                                                    Columns="8"
+                                                    IsVisible="{Binding #SettingsToggleButton.IsChecked}">
+                                                    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
+                                                        <Button
+                                                            Name="ColorButton1"
+                                                            Width="1"
+                                                            Height="1"
+                                                            Background="Black"
+                                                            Command="{Binding SetColorCommand}"
+                                                            CommandParameter="{Binding #ColorButton1.Background}" />
+                                                    </Viewbox>
+                                                    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
+                                                        <Button
+                                                            Name="ColorButton2"
+                                                            Width="1"
+                                                            Height="1"
+                                                            Background="IndianRed"
+                                                            Command="{Binding SetColorCommand}"
+                                                            CommandParameter="{Binding #ColorButton2.Background}" />
+                                                    </Viewbox>
+                                                    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
+                                                        <Button
+                                                            Name="ColorButton3"
+                                                            Width="1"
+                                                            Height="1"
+                                                            Background="SlateBlue"
+                                                            Command="{Binding SetColorCommand}"
+                                                            CommandParameter="{Binding #ColorButton3.Background}" />
+                                                    </Viewbox>
+                                                    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
+                                                        <Button
+                                                            Name="ColorButton4"
+                                                            Width="1"
+                                                            Height="1"
+                                                            Background="OrangeRed"
+                                                            Command="{Binding SetColorCommand}"
+                                                            CommandParameter="{Binding #ColorButton4.Background}" />
+                                                    </Viewbox>
+                                                    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
+                                                        <Button
+                                                            Name="ColorButton5"
+                                                            Width="1"
+                                                            Height="1"
+                                                            Background="PaleGreen"
+                                                            Command="{Binding SetColorCommand}"
+                                                            CommandParameter="{Binding #ColorButton5.Background}" />
+                                                    </Viewbox>
+                                                    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
+                                                        <Button
+                                                            Name="ColorButton6"
+                                                            Width="1"
+                                                            Height="1"
+                                                            Background="Orchid"
+                                                            Command="{Binding SetColorCommand}"
+                                                            CommandParameter="{Binding #ColorButton6.Background}" />
+                                                    </Viewbox>
+                                                    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
+                                                        <Button
+                                                            Name="ColorButton7"
+                                                            Width="1"
+                                                            Height="1"
+                                                            Background="Olive"
+                                                            Command="{Binding SetColorCommand}"
+                                                            CommandParameter="{Binding #ColorButton7.Background}" />
+                                                    </Viewbox>
+                                                    <Viewbox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform">
+                                                        <Button
+                                                            Name="ColorButton8"
+                                                            Width="1"
+                                                            Height="1"
+                                                            Background="SandyBrown"
+                                                            Command="{Binding SetColorCommand}"
+                                                            CommandParameter="{Binding #ColorButton8.Background}" />
+                                                    </Viewbox>
+                                                </UniformGrid>
+                                            </StackPanel>
                                         </Grid>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Button HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding AddFunctionCommand}" Content="+">
+                                <PathIcon Data="{StaticResource add_regular}" />
+                            </Button>
+                            <ListBox ItemsSource="{Binding SplinePoints}" SelectedItem="{Binding SelectedPoint}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel>
+                                            <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="*,*">
+                                                <Label Grid.Row="0" Grid.Column="0" Content="X:" />
+                                                <TextBox
+                                                    Grid.Row="1"
+                                                    Grid.Column="0"
+                                                    Margin="3"
+                                                    HorizontalAlignment="Stretch"
+                                                    Background="White"
+                                                    Text="{Binding X, UpdateSourceTrigger=LostFocus}" />
+                                                <Label Grid.Row="0" Grid.Column="1" Content="Y:" />
+                                                <TextBox
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Margin="3"
+                                                    HorizontalAlignment="Stretch"
+                                                    Background="White"
+                                                    Text="{Binding Y, UpdateSourceTrigger=LostFocus}" />
+                                            </Grid>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </ScrollViewer>
                 </DockPanel>
             </Border>
 
