@@ -230,8 +230,6 @@ public class GraphGridControl : UserControl
         }
     }
 
-
-
     public Point CanvasToLocal(double x, double y)
     {
         var viewCenter = Bounds.Center;

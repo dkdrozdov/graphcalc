@@ -5,8 +5,43 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using GraphCalc.ViewModels;
 using GraphCalc.Views;
+using Avalonia.Data.Converters;
+using System;
+using System.Globalization;
+using Avalonia.Data;
 
 namespace GraphCalc;
+
+public class EmptyStringToZeroDoubleConverter : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is double doubleValue)
+        {
+            return doubleValue.ToString(culture);
+        }
+
+        return new BindingNotification(new InvalidCastException(), BindingErrorType.Error);
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        if (value is string stringValue)
+        {
+            if (string.IsNullOrWhiteSpace(stringValue))
+            {
+                return 0.0;
+            }
+
+            if (double.TryParse(stringValue, NumberStyles.Any, culture, out double result))
+            {
+                return result;
+            }
+        }
+
+        return new BindingNotification(new InvalidCastException(), BindingErrorType.Error);
+    }
+}
 
 public partial class App : Application
 {

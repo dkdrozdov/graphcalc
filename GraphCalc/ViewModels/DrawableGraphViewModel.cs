@@ -10,7 +10,6 @@ using GraphCalc.Models;
 
 namespace GraphCalc.ViewModels;
 
-
 public partial class DrawableGraphViewModel : ObservableObject
 {
     [ObservableProperty]
@@ -24,10 +23,6 @@ public partial class DrawableGraphViewModel : ObservableObject
 
     [ObservableProperty]
     private string? expressionLog;
-    [ObservableProperty]
-    private string? _userExpression;
-    [ObservableProperty]
-    private bool expressionLogNotEmpty;
     [ObservableProperty]
     private bool _isHidden;
     [ObservableProperty]
@@ -48,7 +43,6 @@ public partial class DrawableGraphViewModel : ObservableObject
         Graph = graph;
         LineWidth = 1;
         LineOpacity = 1;
-        expressionLogNotEmpty = false;
         RemoveCommand = new RelayCommand(Remove);
         drawableGraphsViewModel = _drawableGraphsViewModel;
         IsHidden = false;
@@ -58,30 +52,5 @@ public partial class DrawableGraphViewModel : ObservableObject
     public void Remove()
     {
         drawableGraphsViewModel.Graphs.Remove(this);
-    }
-
-    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
-    {
-        base.OnPropertyChanged(e);
-
-        if (e.PropertyName == nameof(UserExpression))
-        {
-
-            Dictionary<string, object> variables = [];
-
-            for (char i = 'a'; i <= 'z'; i++)
-            {
-                variables.Add(i.ToString(), new { Value = 0, Exists = false });
-            }
-
-            Graph = new DrawableFunction(UserExpression ?? "", out string resultMessage);
-            ExpressionLog = resultMessage;
-            ExpressionLogNotEmpty = resultMessage != "";
-
-        }
-        if (e.PropertyName == nameof(LineOpacity))
-        {
-            Brush = new SolidColorBrush(Colors.Black, LineOpacity);
-        }
     }
 }

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="using:GraphCalc.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:GraphCalc;assembly=GraphCalc"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:paz="using:Avalonia.Controls.PanAndZoom"
     xmlns:vm="using:GraphCalc.ViewModels"
@@ -22,6 +23,7 @@
         <StreamGeometry x:Key="eye_hide_regular">M2.21967 2.21967C1.9534 2.48594 1.9292 2.9026 2.14705 3.19621L2.21967 3.28033L6.25424 7.3149C4.33225 8.66437 2.89577 10.6799 2.29888 13.0644C2.1983 13.4662 2.4425 13.8735 2.84431 13.9741C3.24613 14.0746 3.6534 13.8305 3.75399 13.4286C4.28346 11.3135 5.59112 9.53947 7.33416 8.39452L9.14379 10.2043C8.43628 10.9258 8 11.9143 8 13.0046C8 15.2138 9.79086 17.0046 12 17.0046C13.0904 17.0046 14.0788 16.5683 14.8004 15.8608L20.7197 21.7803C21.0126 22.0732 21.4874 22.0732 21.7803 21.7803C22.0466 21.5141 22.0708 21.0974 21.8529 20.8038L21.7803 20.7197L15.6668 14.6055L15.668 14.604L14.4679 13.4061L11.598 10.5368L11.6 10.536L8.71877 7.65782L8.72 7.656L7.58672 6.52549L3.28033 2.21967C2.98744 1.92678 2.51256 1.92678 2.21967 2.21967ZM10.2041 11.2655L13.7392 14.8006C13.2892 15.2364 12.6759 15.5046 12 15.5046C10.6193 15.5046 9.5 14.3853 9.5 13.0046C9.5 12.3287 9.76824 11.7154 10.2041 11.2655ZM12 5.5C10.9997 5.5 10.0291 5.64807 9.11109 5.925L10.3481 7.16119C10.8839 7.05532 11.4364 7 12 7C15.9231 7 19.3099 9.68026 20.2471 13.4332C20.3475 13.835 20.7546 14.0794 21.1565 13.9791C21.5584 13.8787 21.8028 13.4716 21.7024 13.0697C20.5994 8.65272 16.6155 5.5 12 5.5ZM12.1947 9.00928L15.996 12.81C15.8942 10.7531 14.2472 9.10764 12.1947 9.00928Z</StreamGeometry>
         <StreamGeometry x:Key="data_line_regular">M19,4.5 C18.1716,4.5 17.5,5.17157 17.5,6 C17.5,6.82843 18.1716,7.5 19,7.5 C19.8284,7.5 20.5,6.82843 20.5,6 C20.5,5.17157 19.8284,4.5 19,4.5 Z M16,6 C16,4.34315 17.3431,3 19,3 C20.6569,3 22,4.34315 22,6 C22,7.65685 20.6569,9 19,9 C18.8382,9 18.6794,8.98719 18.5246,8.96254 L16.4865,12.3209 C16.8107,12.8001 17,13.3779 17,14 C17,15.6569 15.6569,17 14,17 C13.0971,17 12.2874,16.6012 11.7374,15.9701 L7.99584,17.8406 C7.9986,17.8934 8,17.9465 8,18 C8,19.6569 6.65685,21 5,21 C3.34315,21 2,19.6569 2,18 C2,16.3431 3.34315,15 5,15 C6.06616,15 7.00242,15.5562 7.5345,16.3942 L11.066,14.6287 C11.0228,14.426 11,14.2156 11,14 C11,12.3431 12.3431,11 14,11 C14.4823,11 14.938,11.1138 15.3417,11.316 L17.1395,8.35358 C16.4454,7.80411 16,6.95406 16,6 Z M14,12.5 C13.1716,12.5 12.5,13.1716 12.5,14 C12.5,14.8284 13.1716,15.5 14,15.5 C14.8284,15.5 15.5,14.8284 15.5,14 C15.5,13.1716 14.8284,12.5 14,12.5 Z M5,16.5 C4.17157,16.5 3.5,17.1716 3.5,18 C3.5,18.8284 4.17157,19.5 5,19.5 C5.82843,19.5 6.5,18.8284 6.5,18 C6.5,17.1716 5.82843,16.5 5,16.5 Z</StreamGeometry>
         <StreamGeometry x:Key="math_formula_regular">M12.4817 3.82717C11.3693 3.00322 9.78596 3.7358 9.69388 5.11699L9.53501 7.50001H12.25C12.6642 7.50001 13 7.8358 13 8.25001C13 8.66423 12.6642 9.00001 12.25 9.00001H9.43501L8.83462 18.0059C8.6556 20.6912 5.47707 22.0078 3.45168 20.2355L3.25613 20.0644C2.9444 19.7917 2.91282 19.3179 3.18558 19.0061C3.45834 18.6944 3.93216 18.6628 4.24389 18.9356L4.43943 19.1067C5.53003 20.061 7.24154 19.352 7.33794 17.9061L7.93168 9.00001H5.75001C5.3358 9.00001 5.00001 8.66423 5.00001 8.25001C5.00001 7.8358 5.3358 7.50001 5.75001 7.50001H8.03168L8.1972 5.01721C8.3682 2.45214 11.3087 1.09164 13.3745 2.62184L13.7464 2.89734C14.0793 3.1439 14.1492 3.61359 13.9027 3.94643C13.6561 4.27928 13.1864 4.34923 12.8536 4.10268L12.4817 3.82717Z M13.7121 12.7634C13.4879 12.3373 12.9259 12.2299 12.5604 12.5432L12.2381 12.8194C11.9236 13.089 11.4501 13.0526 11.1806 12.7381C10.911 12.4236 10.9474 11.9501 11.2619 11.6806L11.5842 11.4043C12.6809 10.4643 14.3668 10.7865 15.0395 12.0647L16.0171 13.9222L18.7197 11.2197C19.0126 10.9268 19.4874 10.9268 19.7803 11.2197C20.0732 11.5126 20.0732 11.9874 19.7803 12.2803L16.7486 15.312L18.2879 18.2366C18.5121 18.6627 19.0741 18.7701 19.4397 18.4568L19.7619 18.1806C20.0764 17.911 20.5499 17.9474 20.8195 18.2619C21.089 18.5764 21.0526 19.0499 20.7381 19.3194L20.4159 19.5957C19.3191 20.5357 17.6333 20.2135 16.9605 18.9353L15.6381 16.4226L12.2803 19.7803C11.9875 20.0732 11.5126 20.0732 11.2197 19.7803C10.9268 19.4874 10.9268 19.0126 11.2197 18.7197L14.9066 15.0328L13.7121 12.7634Z</StreamGeometry>
+        <local:EmptyStringToZeroDoubleConverter x:Key="EmptyStringToZeroDoubleConverter" />
     </Window.Resources>
 
     <Window.Styles>
@@ -56,56 +58,104 @@
         <Grid ColumnDefinitions="4*,9*">
             <Border Grid.Column="0" Margin="10" Background="White">
                 <DockPanel>
-                    <Panel Height="35" Background="WhiteSmoke" DockPanel.Dock="Bottom">
-                        <Grid VerticalAlignment="Stretch" ColumnDefinitions="Auto, Auto, Auto">
-                            <Button
-                                Grid.Column="0"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                Command="{Binding AddPointCommand}"
-                                Content="+" />
-                            <Button
-                                Grid.Column="1"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                Command="{Binding RemovePointCommand}"
-                                Content="-" />
-                            <Button
-                                Grid.Column="2"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                Command="{Binding RebuildSplineCommand}"
-                                Content="Build Spline" />
-                        </Grid>
-                    </Panel>
+                    <Button HorizontalAlignment="Right" Click="ResetView" Content="Reset View" DockPanel.Dock="Bottom" />
                     <ScrollViewer>
                         <StackPanel Margin="8,8,18,8">
                             <ItemsControl ItemsSource="{Binding Graphs.Graphs}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Grid Margin="0,0,0,18" RowDefinitions="*, Auto">
-                                            <StackPanel Grid.Row="0" FlowDirection="RightToLeft" Orientation="Horizontal">
-                                                <Button VerticalAlignment="Top" VerticalContentAlignment="Center" Command="{Binding RemoveCommand}">
+                                        <StackPanel>
+                                            <!--  Top Button Panel  -->
+                                            <DockPanel Grid.Row="0">
+                                                <Button VerticalAlignment="Center" VerticalContentAlignment="Center" Command="{Binding RemoveCommand}" DockPanel.Dock="Right">
                                                     <PathIcon Data="{StaticResource remove_regular}" />
                                                 </Button>
-                                                <ToggleButton Name="SettingsToggleButton" Classes="gray" IsChecked="False">
+                                                <ToggleButton Name="SettingsToggleButton" Classes="gray" DockPanel.Dock="Right" IsChecked="False">
                                                     <Panel>
                                                         <PathIcon Data="{StaticResource settings_regular}" />
                                                     </Panel>
                                                 </ToggleButton>
-                                                <ToggleButton Name="ShowToggleButton" Classes="gray" IsChecked="{Binding IsHidden}">
+                                                <ToggleButton Name="ShowToggleButton" Classes="gray" DockPanel.Dock="Right" IsChecked="{Binding IsHidden}">
                                                     <Panel>
-                                                        <PathIcon Foreground="{Binding Brush}" Classes="show-on" Data="{StaticResource eye_hide_regular}" />
-                                                        <PathIcon Foreground="{Binding Brush}" Classes="show-off" Data="{StaticResource eye_show_regular}" />
+                                                        <PathIcon Classes="show-on" Data="{StaticResource eye_hide_regular}" />
+                                                        <PathIcon Classes="show-off" Data="{StaticResource eye_show_regular}" />
                                                     </Panel>
                                                 </ToggleButton>
-                                            </StackPanel>
-                                            <StackPanel Grid.Row="1">
-                                                <TextBox Height="20" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Text="{Binding UserExpression}" />
-                                                <Label Content="{Binding ExpressionLog}" IsVisible="{Binding ExpressionLogNotEmpty}" />
+                                                <!--  Graph-specific content  -->
+                                                <ContentControl Content="{Binding .}" DockPanel.Dock="Left">
+                                                    <ContentControl.DataTemplates>
+                                                        <DataTemplate DataType="vm:DrawableFunctionViewModel">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Label>
+                                                                    <PathIcon Data="{StaticResource math_formula_regular}" Foreground="{Binding Brush}" />
+                                                                </Label>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                        <DataTemplate DataType="vm:DrawableSplineViewModel">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Label>
+                                                                    <PathIcon Data="{StaticResource data_line_regular}" Foreground="{Binding Brush}" />
+                                                                </Label>
+                                                                <Panel Height="35" Background="WhiteSmoke" DockPanel.Dock="Left">
+                                                                    <Grid VerticalAlignment="Stretch" ColumnDefinitions="Auto, Auto">
+                                                                        <Button
+                                                                            Grid.Column="0"
+                                                                            HorizontalAlignment="Stretch"
+                                                                            VerticalAlignment="Stretch"
+                                                                            VerticalContentAlignment="Center"
+                                                                            Command="{Binding AddPointCommand}"
+                                                                            Content="+" />
+                                                                        <Button
+                                                                            Grid.Column="1"
+                                                                            HorizontalAlignment="Stretch"
+                                                                            VerticalAlignment="Stretch"
+                                                                            VerticalContentAlignment="Center"
+                                                                            Command="{Binding RemovePointCommand}"
+                                                                            Content="-" />
+                                                                    </Grid>
+                                                                </Panel>
+                                                            </StackPanel>
+                                                        </DataTemplate>
+                                                    </ContentControl.DataTemplates>
+                                                </ContentControl>
+                                            </DockPanel>
+                                            <!--  Input  -->
+                                            <ContentControl Content="{Binding .}">
+                                                <ContentControl.DataTemplates>
+                                                    <!--  DrawableFunction Input  -->
+                                                    <DataTemplate DataType="vm:DrawableFunctionViewModel">
+                                                        <StackPanel>
+                                                            <TextBox Height="20" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Text="{Binding UserExpression}" />
+                                                            <Label Content="{Binding ExpressionLog}" IsVisible="{Binding ExpressionLogNotEmpty}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                    <!--  DrawableSpline Input  -->
+                                                    <DataTemplate DataType="vm:DrawableSplineViewModel">
+                                                        <Expander Padding="0" Header="Points">
+                                                            <StackPanel>
+                                                                <Grid ColumnDefinitions="*, *">
+                                                                    <Label Grid.Column="0" Content="X:" />
+                                                                    <Label Grid.Column="1" Content="Y:" />
+                                                                </Grid>
+                                                                <ItemsControl Padding="0" ItemsSource="{Binding SplinePoints}">
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <StackPanel>
+                                                                                <Grid ColumnDefinitions="*, *">
+                                                                                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Background="White" Text="{Binding X, TargetNullValue=0, FallbackValue=0, Converter={StaticResource EmptyStringToZeroDoubleConverter}}" />
+                                                                                    <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Background="White" Text="{Binding Y, TargetNullValue=0, FallbackValue=0, Converter={StaticResource EmptyStringToZeroDoubleConverter}}" />
+                                                                                </Grid>
+                                                                            </StackPanel>
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
+                                                            </StackPanel>
+                                                        </Expander>
+                                                    </DataTemplate>
+                                                </ContentControl.DataTemplates>
+                                            </ContentControl>
+                                            <!--  Common Properties  -->
+                                            <StackPanel Grid.Row="1" Margin="0,0,0,18">
                                                 <Grid ColumnDefinitions="Auto, *" IsVisible="{Binding #SettingsToggleButton.IsChecked}" RowDefinitions="Auto,Auto">
                                                     <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Thickness: " />
                                                     <Slider
@@ -204,86 +254,51 @@
                                                     </Viewbox>
                                                 </UniformGrid>
                                             </StackPanel>
-                                        </Grid>
+                                        </StackPanel>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
-                            <Button HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding AddFunctionCommand}" Content="+">
-                                <PathIcon Data="{StaticResource add_regular}" />
-                            </Button>
-                            <ListBox ItemsSource="{Binding SplinePoints}" SelectedItem="{Binding SelectedPoint}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel>
-                                            <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="*,*">
-                                                <Label Grid.Row="0" Grid.Column="0" Content="X:" />
-                                                <TextBox
-                                                    Grid.Row="1"
-                                                    Grid.Column="0"
-                                                    Margin="3"
-                                                    HorizontalAlignment="Stretch"
-                                                    Background="White"
-                                                    Text="{Binding X, UpdateSourceTrigger=LostFocus}" />
-                                                <Label Grid.Row="0" Grid.Column="1" Content="Y:" />
-                                                <TextBox
-                                                    Grid.Row="1"
-                                                    Grid.Column="1"
-                                                    Margin="3"
-                                                    HorizontalAlignment="Stretch"
-                                                    Background="White"
-                                                    Text="{Binding Y, UpdateSourceTrigger=LostFocus}" />
-                                            </Grid>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
+                            <Grid HorizontalAlignment="Stretch" ColumnDefinitions="*,*">
+                                <Button Grid.Column="0" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding AddFunctionCommand}">
+                                    <PathIcon Data="{StaticResource math_formula_regular}" />
+                                </Button>
+                                <Button Grid.Column="1" HorizontalAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding AddSplineCommand}">
+                                    <PathIcon Data="{StaticResource data_line_regular}" />
+                                </Button>
+                            </Grid>
                         </StackPanel>
                     </ScrollViewer>
                 </DockPanel>
             </Border>
 
             <Border Grid.Column="1" Margin="10" Background="White">
-                <!-- <StackPanel Grid.Column="0" Margin="10">
-                </StackPanel>-->
-                <Grid ColumnDefinitions="50,*,50" RowDefinitions="Auto,12,Auto,12,*,12">
-                    <StackPanel
-                        Grid.Row="0"
-                        Grid.Column="1"
-                        Margin="10"
-                        HorizontalAlignment="Stretch"
-                        Orientation="Vertical">
-                        <Button HorizontalAlignment="Right" Click="ResetView" Content="Reset View" />
-                        <!-- <TextBlock Text="{Binding #GraphGrid.Log}" /> -->
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Orientation="Horizontal" />
-                    <Panel Grid.Row="4" Grid.Column="1">
-                        <c:GraphGridControl
-                            Name="GraphGrid"
-                            Graphs="{Binding Graphs}"
-                            OffsetX="{Binding #ZoomBorder.OffsetX}"
-                            OffsetY="{Binding #ZoomBorder.OffsetY}"
-                            Splines="{Binding Splines}"
-                            ZoomX="{Binding #ZoomBorder.ZoomX}"
-                            ZoomY="{Binding #ZoomBorder.ZoomY}" />
-                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
-                            <paz:ZoomBorder
-                                Name="ZoomBorder"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                Background="AliceBlue"
-                                ClipToBounds="True"
-                                EnablePan="True"
-                                EnableZoom="True"
-                                Focusable="True"
-                                Opacity="0.3"
-                                PanButton="Left"
-                                Stretch="None"
-                                ZoomSpeed="1.1">
-                                <Rectangle Width="0" Height="0" Fill="Black" />
-                            </paz:ZoomBorder>
-                        </ScrollViewer>
-                    </Panel>
-                </Grid>
+                <Panel>
+                    <c:GraphGridControl
+                        Name="GraphGrid"
+                        Graphs="{Binding Graphs}"
+                        OffsetX="{Binding #ZoomBorder.OffsetX}"
+                        OffsetY="{Binding #ZoomBorder.OffsetY}"
+                        Splines="{Binding Splines}"
+                        ZoomX="{Binding #ZoomBorder.ZoomX}"
+                        ZoomY="{Binding #ZoomBorder.ZoomY}" />
+                    <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                        <paz:ZoomBorder
+                            Name="ZoomBorder"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="AliceBlue"
+                            ClipToBounds="True"
+                            EnablePan="True"
+                            EnableZoom="True"
+                            Focusable="True"
+                            Opacity="0.3"
+                            PanButton="Left"
+                            Stretch="None"
+                            ZoomSpeed="1.1">
+                            <Rectangle Width="0" Height="0" Fill="Black" />
+                        </paz:ZoomBorder>
+                    </ScrollViewer>
+                </Panel>
             </Border>
         </Grid>
     </Panel>

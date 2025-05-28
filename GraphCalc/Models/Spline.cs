@@ -59,6 +59,7 @@ public class Spline(List<Vector2> points, List<SplineSegment> splineSegments) : 
         List<double> grid = [];
         for (int i = 0; x1 + i * step < x2; i++) grid.Add(x1 + i * step);
         grid.Add(x2);
+        grid = [.. grid.Concat(points.Select(p => (double)p.X)).OrderBy(x => x)];
 
         grid.ForEach(tick =>
         {

@@ -8,9 +8,9 @@ namespace GraphCalc.Models;
 
 public static class SplineBuilder
 {
-    public static Spline? BuildQuadraticSpline(List<Vector2> points, bool natural = true)
+    public static Spline BuildQuadraticSpline(List<Vector2> points, bool natural = true)
     {
-        if (points.Count < 2) return null;
+        if (points.Count < 2) return new Spline([], []);
 
         int segmentsCount = points.Count - 1;
         int vars = segmentsCount * 3;

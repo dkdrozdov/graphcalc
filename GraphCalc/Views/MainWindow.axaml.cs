@@ -1,7 +1,10 @@
 using System;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.PanAndZoom;
+using Avalonia.Data;
+using Avalonia.Data.Converters;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
@@ -10,6 +13,7 @@ namespace GraphCalc.Views;
 
 public partial class MainWindow : Window
 {
+
     private readonly ZoomBorder? _zoomBorder;
     private readonly Button? _resetViewButton;
     // public Matrix? Matrix => _zoomBorder?.Matrix;
