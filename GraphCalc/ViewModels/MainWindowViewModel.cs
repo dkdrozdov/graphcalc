@@ -17,8 +17,7 @@ public partial class MainWindowViewModel : ViewModelBase
     public DrawableGraphsViewModel Graphs { get; }
     public ICommand AddFunctionCommand { get; }
     public ICommand AddSplineCommand { get; }
-
-
+    public PreferencesViewModel Preferences { get; }
 
     public void AddFunction()
     {
@@ -35,6 +34,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         Splines = new();
         Graphs = new();
+        Preferences = new();
 
         AddFunctionCommand = new RelayCommand(AddFunction);
         AddSplineCommand = new RelayCommand(AddSpline);
