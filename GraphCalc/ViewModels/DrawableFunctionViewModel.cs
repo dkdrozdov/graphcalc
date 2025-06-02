@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -19,6 +21,12 @@ public partial class DrawableFunctionViewModel(IDrawableGraph graph, DrawableGra
     private string? _userExpression;
     [ObservableProperty]
     private bool expressionLogNotEmpty = false;
+
+    public override async Task ParseStringInputAsync(string? content)
+    {
+        UserExpression = content;
+        await Task.CompletedTask;
+    }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs e)
     {

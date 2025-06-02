@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Windows.Input;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GraphCalc.Models;

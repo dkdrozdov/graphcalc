@@ -9,6 +9,8 @@ using Avalonia.Data.Converters;
 using System;
 using System.Globalization;
 using Avalonia.Data;
+using Avalonia.Interactivity;
+using Avalonia.Controls;
 
 namespace GraphCalc;
 
@@ -49,6 +51,9 @@ public partial class App : Application
     {
         AvaloniaXamlLoader.Load(this);
     }
+
+
+
 
     public override void OnFrameworkInitializationCompleted()
     {

@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,7 +13,7 @@ using GraphCalc.Models;
 
 namespace GraphCalc.ViewModels;
 
-public partial class DrawableGraphViewModel : ObservableObject
+public abstract partial class DrawableGraphViewModel : ObservableObject
 {
     [ObservableProperty]
     private IDrawableGraph _graph;
@@ -41,7 +44,7 @@ public partial class DrawableGraphViewModel : ObservableObject
     public DrawableGraphViewModel(IDrawableGraph graph, DrawableGraphsViewModel _drawableGraphsViewModel)
     {
         Graph = graph;
-        LineWidth = 1;
+        LineWidth = 2;
         LineOpacity = 1;
         RemoveCommand = new RelayCommand(Remove);
         drawableGraphsViewModel = _drawableGraphsViewModel;
@@ -53,4 +56,6 @@ public partial class DrawableGraphViewModel : ObservableObject
     {
         drawableGraphsViewModel.Graphs.Remove(this);
     }
+
+    public abstract Task ParseStringInputAsync(string? content);
 }
