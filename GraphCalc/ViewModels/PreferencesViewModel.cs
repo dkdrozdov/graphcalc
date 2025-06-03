@@ -17,6 +17,8 @@ namespace GraphCalc.ViewModels;
 
 public partial class PreferencesViewModel : ViewModelBase
 {
+    [ObservableProperty]
+    double _renderStep = 0.02;
 
     [ObservableProperty]
     bool _showGridlines = true;

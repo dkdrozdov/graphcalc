@@ -287,7 +287,7 @@ public class GraphGridControl : UserControl
                                 );
     }
 
-    double GraphResolution { get => 0.025 * Math.Sqrt(ZoomX + 1); }
+    double GraphResolution { get => _preferences?.RenderStep ?? 0.025; }
 
     private void DrawGraphs(DrawingContext context, DrawableGraphsViewModel? graphs)
     {

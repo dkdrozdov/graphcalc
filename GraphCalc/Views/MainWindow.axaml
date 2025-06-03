@@ -80,7 +80,7 @@
                             </Panel>
                         </ToggleButton>
                     </DockPanel>
-                    <StackPanel HorizontalAlignment="Stretch" IsVisible="{Binding #GridSettingsToggleButton.IsChecked}">
+                    <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" IsVisible="{Binding #GridSettingsToggleButton.IsChecked}">
                         <Label Margin="10,0,0,5" HorizontalAlignment="Right" Content="Grid Properties" Foreground="Gray" />
                         <CheckBox Name="ShowGridOption" Content="Show gridlines" IsChecked="{Binding Preferences.ShowGridlines}" />
                         <CheckBox Content="Show minor gridlines" IsChecked="{Binding Preferences.ShowMinorGridlines}" IsEnabled="{Binding #ShowGridOption.IsChecked}" />
@@ -88,6 +88,18 @@
                         <CheckBox Content="Show axis numbers" IsChecked="{Binding Preferences.ShowAxisNumbers}" />
                         <CheckBox Content="Show X axis" IsChecked="{Binding Preferences.ShowXAxis}" />
                         <CheckBox Content="Show Y axis" IsChecked="{Binding Preferences.ShowYAxis}" />
+                        <Label Margin="10,0,0,5" HorizontalAlignment="Right" Content="Graph Properties" Foreground="Gray" />
+                        <Grid ColumnDefinitions="*, 40">
+                            <TextBlock Grid.Column="0" Text="Render Step" />
+                            <TextBlock Grid.Column="1" Text="{Binding #RenderStepSlider.Value, StringFormat={}{0:F2}}" />
+                        </Grid>
+                        <Slider
+                            Name="RenderStepSlider"
+                            IsSnapToTickEnabled="True"
+                            Maximum="1.0"
+                            Minimum="0.01"
+                            TickFrequency="0.01"
+                            Value="{Binding Preferences.RenderStep}" />
                     </StackPanel>
                     <ScrollViewer IsVisible="{Binding !#GridSettingsToggleButton.IsChecked}">
                         <StackPanel Margin="8,8,18,8">
