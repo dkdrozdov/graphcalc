@@ -41,15 +41,10 @@ public partial class MainWindow : Window
         if (_zoomBorder != null)
         {
             _zoomBorder.KeyDown += ZoomBorder_KeyDown;
-            _zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
             _zoomBorder.PointerPressed += GraphGrid_PointerPressed;
             _zoomBorder.PointerReleased += GraphGrid_PointerReleased;
             _zoomBorder.PointerMoved += GraphGrid_PointerMoved;
         }
-
-        // if (_graphGridControl != null)
-        // {
-        // }
     }
 
     private void GraphGrid_PointerMoved(object? sender, PointerEventArgs e)
@@ -110,6 +105,20 @@ public partial class MainWindow : Window
     {
         _zoomBorder?.ResetMatrix();
     }
+    public void ZoomIn(object sender, RoutedEventArgs args)
+    {
+        if (_zoomBorder == null) return;
+
+        var point = new Point(-_zoomBorder.OffsetX / _zoomBorder.ZoomX, -_zoomBorder.OffsetY / _zoomBorder.ZoomY);
+        _zoomBorder.ZoomDeltaTo(4, point.X, point.Y);
+    }
+    public void ZoomOut(object sender, RoutedEventArgs args)
+    {
+        if (_zoomBorder == null) return;
+
+        var point = new Point(-_zoomBorder.OffsetX / _zoomBorder.ZoomX, -_zoomBorder.OffsetY / _zoomBorder.ZoomY);
+        _zoomBorder.ZoomDeltaTo(-4, point.X, point.Y);
+    }
 
     private void ZoomBorder_KeyDown(object? sender, KeyEventArgs e)
     {
@@ -119,12 +128,6 @@ public partial class MainWindow : Window
                 ResetView();
                 break;
         }
-    }
-
-    private void ZoomBorder_ZoomChanged(object sender, ZoomChangedEventArgs e)
-    {
-        // Debug.WriteLine($"[ZoomChanged] {e.ZoomX} {e.ZoomY} {e.OffsetX} {e.OffsetY}");
-        // Debug.WriteLine($"[ZoomChanged] {Matrix!.Value.M11} {Matrix!.Value.M12} {Matrix!.Value.M13} {Matrix!.Value.M21} {Matrix!.Value.M22} {Matrix!.Value.M23} {Matrix!.Value.M31} {Matrix!.Value.M32} {Matrix!.Value.M33}");
     }
 
 }
