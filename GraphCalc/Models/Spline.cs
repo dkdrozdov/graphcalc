@@ -12,15 +12,17 @@ public class SplineCalculationResult(bool exists, double value)
 
 public class SplineSegment(Vector2 start, Vector2 end, List<double> coefficients)
 {
-    Vector2 Start { get; } = start;
-    Vector2 End { get; } = end;
+    public Vector2 Start { get; } = start;
+    public Vector2 End { get; } = end;
 
     // a0*x^0 + a1*x^1 + a2*x^2 ...
     List<double> Coefficients { get; } = coefficients;
 
-    public double Calculate(double x)
+    public double? Calculate(double x, bool includeLeft, bool includeRight)
     {
-        if (!(Start.X < x && x < End.X)) return 0;
+        Func<double, bool> checkLeft = includeLeft ? ((double x) => Start.X <= x) : ((double x) => Start.X < x);
+        Func<double, bool> checkRight = includeRight ? ((double x) => x <= End.X) : ((double x) => x < End.X);
+        if (!(checkLeft(x) && checkRight(x))) return null;
 
         int power = 0;
         double sum = 0;
@@ -48,7 +50,13 @@ public class Spline(List<Vector2> points, List<SplineSegment> splineSegments) : 
             )
             return new SplineCalculationResult(false, 0);
 
-        return new SplineCalculationResult(true, SplineSegments.Select(segment => segment.Calculate(x)).Sum());
+        var result = SplineSegments
+            .Select(segment => segment
+                                .Calculate(x, Points.First() == segment.Start, true))
+            .Where(x => x != null)
+            .Sum();
+
+        return new SplineCalculationResult(result != null, result ?? 0);
     }
 
     public Vector2? PointAt(double x)
@@ -65,7 +73,8 @@ public class Spline(List<Vector2> points, List<SplineSegment> splineSegments) : 
         List<double> grid = [];
         for (int i = 0; x1 + i * step < x2; i++) grid.Add(x1 + i * step);
         grid.Add(x2);
-        grid = [.. grid.Concat(points.Select(p => (double)p.X)).OrderBy(x => x)];
+        grid = [.. grid.Concat(Points.Select(p => (double)p.X)).OrderBy(x => x)];
+        grid = [.. grid.Where(x => x >= Points.First().X && x <= Points.Last().X)];
 
         grid.ForEach(tick =>
         {
@@ -81,7 +90,7 @@ public class Spline(List<Vector2> points, List<SplineSegment> splineSegments) : 
             }
         });
 
-        points = [.. points.Concat(points).OrderBy(x => x.X)];
+        // points = [.. points.Concat(Points).OrderBy(x => x.X)];
 
         return points;
     }
