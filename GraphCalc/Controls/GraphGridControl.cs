@@ -8,6 +8,8 @@ using GraphCalc.Models;
 using GraphCalc.ViewModels;
 using System.Linq;
 using System.Globalization;
+using Avalonia.Input;
+using System.Numerics;
 
 namespace GraphCalc.Controls;
 
@@ -119,6 +121,8 @@ public class GraphGridControl : UserControl
             (o, v) => o.ZoomY = v);
 
     private double _zoomY = 0;
+    private bool _captured;
+    private Point pressedPosition;
 
     public double ZoomY
     {
@@ -267,11 +271,20 @@ public class GraphGridControl : UserControl
         }
         DrawAxes(context, 1.1, 1.0, Colors.Black);
         if (prefs.ShowAxisNumbers) DrawTicks(context, GridSpacing, 14, 1.0, Colors.Black);
+        if (_captured) DrawVertical(context, pressedPosition.X, Colors.Silver, 1.0, 1.0);
         DrawGraphs(context, Graphs);
 
         base.Render(context);
 
         Dispatcher.UIThread.Post(InvalidateVisual, DispatcherPriority.Background);
+    }
+
+    private void DrawVertical(DrawingContext context, double x, Color color, double opacity, double thickness)
+    {
+        context.DrawLine(new Pen(new SolidColorBrush(color, opacity), thickness),
+                                    new Point(CanvasToLocal(x, 0).X, Bounds.Bottom),
+                                    new Point(CanvasToLocal(x, 0).X, Bounds.Top)
+                                );
     }
 
     double GraphResolution { get => 0.025 * Math.Sqrt(ZoomX + 1); }
@@ -294,7 +307,31 @@ public class GraphGridControl : UserControl
                         .Select(p => CanvasToLocal(p.X, p.Y))
                 ];
             DrawPath(context, lineWidth, lineOpacity, Colors.Black, points, brush);
-            foreach (var point in graph.SpecialPoints() ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y));
+
+            List<Vector2> specialPoints = graph.SpecialPoints();
+            if (_captured)
+            {
+                Vector2? p = graphViewModel.Graph.PointAt(pressedPosition.X);
+                if (p != null)
+                {
+                    specialPoints.Add((Vector2)p);
+
+                    var formattedText = new FormattedText(
+                            $"({pressedPosition.X:G2}, {pressedPosition.Y:G2})",
+                            CultureInfo.InvariantCulture,
+                            FlowDirection.LeftToRight,
+                            new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, FontWeight.DemiBold, FontStretch.Normal),
+                            14.0,
+                            brush);
+
+                    var textSize = new Size(formattedText.Width, formattedText.Height);
+                    context.DrawText(
+                        formattedText,
+                        new Point(CanvasToLocal(pressedPosition.X, 0).X /*+ textSize.Width*/, CanvasToLocal(0, ((Vector2)p).X).Y));
+                }
+            }
+
+            foreach (var point in specialPoints ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y));
         }
     }
 
@@ -373,5 +410,35 @@ public class GraphGridControl : UserControl
                                 y - textSize.Height / 2.0));
             }
         }
+    }
+
+    public void Pressed(PointerPressedEventArgs e)
+    {
+        PointerPointProperties properties = e.GetCurrentPoint(this).Properties;
+        if (!properties.IsRightButtonPressed)
+            return;
+
+        _captured = true;
+
+        return;
+    }
+
+    public void Released(PointerReleasedEventArgs e)
+    {
+        _captured = false;
+
+        return;
+    }
+
+    public void Moved(PointerEventArgs e)
+    {
+        Point position = e.GetPosition(this);
+
+        var xCanvas = (position.X - Bounds.Center.X - OffsetX) / (ZoomX * coordinateUnit);
+        var yCanvas = -(position.Y - Bounds.Center.Y - OffsetY) / (ZoomY * coordinateUnit);
+
+        pressedPosition = new Point(xCanvas, yCanvas);
+
+        return;
     }
 }

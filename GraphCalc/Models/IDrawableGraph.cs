@@ -14,4 +14,7 @@ public interface IDrawableGraph
     /// Returns special points that should be specially rendered.
     /// </summary>
     public List<Vector2> SpecialPoints();
+
+
+    public Vector2? PointAt(double x);
 }

@@ -51,6 +51,12 @@ public class Spline(List<Vector2> points, List<SplineSegment> splineSegments) : 
         return new SplineCalculationResult(true, SplineSegments.Select(segment => segment.Calculate(x)).Sum());
     }
 
+    public Vector2? PointAt(double x)
+    {
+        var r = Calculate(x);
+        return r.Exists ? new Vector2((float)x, (float)r.Value) : null;
+    }
+
     public List<Vector2> PointsInBox(double x1, double x2, double y1, double y2, double step)
     {
         List<Vector2> points = [];

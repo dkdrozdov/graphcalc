@@ -104,4 +104,22 @@ public class DrawableFunction : IDrawableGraph
     }
 
     public List<Vector2> SpecialPoints() => [];
+
+    public Vector2? PointAt(double x)
+    {
+        if (Expression == null) return null;
+        var compiledExpression = Expression.Compile(new { x = 0.0f });
+
+        try
+        {
+            var result = compiledExpression(new { x = (float)x });
+            return new Vector2((float)x, (float)result);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine(exception);
+        }
+
+        return null;
+    }
 }

@@ -10,6 +10,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
+using GraphCalc.Controls;
 using GraphCalc.ViewModels;
 
 namespace GraphCalc.Views;
@@ -19,6 +20,7 @@ public partial class MainWindow : Window
 
     private readonly ZoomBorder? _zoomBorder;
     private readonly Button? _resetViewButton;
+    private readonly GraphGridControl? _graphGridControl;
     // public Matrix? Matrix => _zoomBorder?.Matrix;
 
     public MainWindow()
@@ -28,6 +30,8 @@ public partial class MainWindow : Window
 
         _zoomBorder = this.Find<ZoomBorder>("ZoomBorder");
         _resetViewButton = this.Find<Button>("ResetViewButton");
+        _graphGridControl = this.Find<GraphGridControl>("GraphGrid");
+
 
         if (_resetViewButton != null)
         {
@@ -37,9 +41,30 @@ public partial class MainWindow : Window
         if (_zoomBorder != null)
         {
             _zoomBorder.KeyDown += ZoomBorder_KeyDown;
-
             _zoomBorder.ZoomChanged += ZoomBorder_ZoomChanged;
+            _zoomBorder.PointerPressed += GraphGrid_PointerPressed;
+            _zoomBorder.PointerReleased += GraphGrid_PointerReleased;
+            _zoomBorder.PointerMoved += GraphGrid_PointerMoved;
         }
+
+        // if (_graphGridControl != null)
+        // {
+        // }
+    }
+
+    private void GraphGrid_PointerMoved(object? sender, PointerEventArgs e)
+    {
+        _graphGridControl?.Moved(e);
+    }
+
+    private void GraphGrid_PointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        _graphGridControl?.Released(e);
+    }
+
+    private void GraphGrid_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        _graphGridControl?.Pressed(e);
     }
 
     private async void LoadFromFile(object sender, RoutedEventArgs args)
