@@ -80,7 +80,7 @@
                             </Panel>
                         </ToggleButton>
                     </DockPanel>
-                    <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch" IsVisible="{Binding #GridSettingsToggleButton.IsChecked}">
+                    <StackPanel HorizontalAlignment="Stretch" DockPanel.Dock="Top" IsVisible="{Binding #GridSettingsToggleButton.IsChecked}">
                         <Label Margin="10,0,0,5" HorizontalAlignment="Right" Content="Grid Properties" Foreground="Gray" />
                         <CheckBox Name="ShowGridOption" Content="Show gridlines" IsChecked="{Binding Preferences.ShowGridlines}" />
                         <CheckBox Content="Show minor gridlines" IsChecked="{Binding Preferences.ShowMinorGridlines}" IsEnabled="{Binding #ShowGridOption.IsChecked}" />
@@ -143,24 +143,7 @@
                                                                 <Label>
                                                                     <PathIcon Data="{StaticResource data_line_regular}" Foreground="{Binding Brush}" />
                                                                 </Label>
-                                                                <Panel Height="35" Background="WhiteSmoke" DockPanel.Dock="Left">
-                                                                    <Grid VerticalAlignment="Stretch" ColumnDefinitions="Auto, Auto">
-                                                                        <Button
-                                                                            Grid.Column="0"
-                                                                            HorizontalAlignment="Stretch"
-                                                                            VerticalAlignment="Stretch"
-                                                                            VerticalContentAlignment="Center"
-                                                                            Command="{Binding AddPointCommand}"
-                                                                            Content="+" />
-                                                                        <Button
-                                                                            Grid.Column="1"
-                                                                            HorizontalAlignment="Stretch"
-                                                                            VerticalAlignment="Stretch"
-                                                                            VerticalContentAlignment="Center"
-                                                                            Command="{Binding RemovePointCommand}"
-                                                                            Content="-" />
-                                                                    </Grid>
-                                                                </Panel>
+
                                                             </StackPanel>
                                                         </DataTemplate>
                                                     </ContentControl.DataTemplates>
@@ -178,26 +161,41 @@
                                                     </DataTemplate>
                                                     <!--  DrawableSpline Input  -->
                                                     <DataTemplate DataType="vm:DrawableSplineViewModel">
-                                                        <Expander Padding="0" Header="Points">
-                                                            <StackPanel>
-                                                                <Grid ColumnDefinitions="*, *">
-                                                                    <Label Grid.Column="0" Content="X:" />
-                                                                    <Label Grid.Column="1" Content="Y:" />
-                                                                </Grid>
-                                                                <ItemsControl Padding="0" ItemsSource="{Binding SplinePoints}">
-                                                                    <ItemsControl.ItemTemplate>
-                                                                        <DataTemplate>
-                                                                            <StackPanel>
-                                                                                <Grid ColumnDefinitions="*, *">
-                                                                                    <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Background="White" Text="{Binding X, TargetNullValue=0, FallbackValue=0, Converter={StaticResource EmptyStringToZeroDoubleConverter}}" />
-                                                                                    <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Background="White" Text="{Binding Y, TargetNullValue=0, FallbackValue=0, Converter={StaticResource EmptyStringToZeroDoubleConverter}}" />
-                                                                                </Grid>
-                                                                            </StackPanel>
-                                                                        </DataTemplate>
-                                                                    </ItemsControl.ItemTemplate>
-                                                                </ItemsControl>
-                                                            </StackPanel>
-                                                        </Expander>
+                                                        <StackPanel>
+                                                            <ComboBox Margin="0,4,0,4" SelectedIndex="1" ItemsSource="{Binding SplineFactories}" SelectedItem="{Binding SelectedSplineFactory}">
+                                                                <ComboBox.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock Text = "{Binding Name}"/>
+                                                                    </DataTemplate>
+                                                                </ComboBox.ItemTemplate>
+                                                            </ComboBox>
+                                                            <Expander Padding="0" Header="Points">
+                                                                <StackPanel>
+                                                                    <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding RemovePointCommand}">
+                                                                        <PathIcon Data="{StaticResource remove_regular}" />
+                                                                    </Button>
+                                                                    <Grid ColumnDefinitions="*, *" IsVisible="{Binding SplinePointsNotEmpty}">
+                                                                        <Label Grid.Column="0" Content="X:" />
+                                                                        <Label Grid.Column="1" Content="Y:" />
+                                                                    </Grid>
+                                                                    <ItemsControl Padding="0" ItemsSource="{Binding SplinePoints}">
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <StackPanel>
+                                                                                    <Grid ColumnDefinitions="*, *">
+                                                                                        <TextBox Grid.Column="0" HorizontalAlignment="Stretch" Background="White" Text="{Binding X, TargetNullValue=0, FallbackValue=0, Converter={StaticResource EmptyStringToZeroDoubleConverter}}" />
+                                                                                        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Background="White" Text="{Binding Y, TargetNullValue=0, FallbackValue=0, Converter={StaticResource EmptyStringToZeroDoubleConverter}}" />
+                                                                                    </Grid>
+                                                                                </StackPanel>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                    <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalContentAlignment="Center" Command="{Binding AddPointCommand}">
+                                                                        <PathIcon Data="{StaticResource add_regular}" />
+                                                                    </Button>
+                                                                </StackPanel>
+                                                            </Expander>
+                                                        </StackPanel>
                                                     </DataTemplate>
                                                 </ContentControl.DataTemplates>
                                             </ContentControl>
@@ -326,7 +324,6 @@
                         OffsetX="{Binding #ZoomBorder.OffsetX}"
                         OffsetY="{Binding #ZoomBorder.OffsetY}"
                         Preferences="{Binding Preferences}"
-                        Splines="{Binding Splines}"
                         ZoomX="{Binding #ZoomBorder.ZoomX}"
                         ZoomY="{Binding #ZoomBorder.ZoomY}" />
                     <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">

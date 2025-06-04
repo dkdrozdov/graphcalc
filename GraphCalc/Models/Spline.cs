@@ -37,7 +37,7 @@ public class SplineSegment(Vector2 start, Vector2 end, List<double> coefficients
     }
 }
 
-public class Spline(List<Vector2> points, List<SplineSegment> splineSegments) : IDrawableGraph
+public class Spline(IEnumerable<Vector2> points, List<SplineSegment> splineSegments) : IDrawableGraph
 {
     public List<Vector2> Points { get; } = [.. points.OrderBy(x => x.X)];
     public List<SplineSegment> SplineSegments { get; } = splineSegments;
@@ -65,7 +65,7 @@ public class Spline(List<Vector2> points, List<SplineSegment> splineSegments) : 
         return r.Exists ? new Vector2((float)x, (float)r.Value) : null;
     }
 
-    public List<Vector2> PointsInBox(double x1, double x2, double y1, double y2, double step)
+    public IEnumerable<Vector2> PointsInBox(double x1, double x2, double y1, double y2, double step)
     {
         List<Vector2> points = [];
         if (Points.Count == 0) return points;
@@ -95,5 +95,5 @@ public class Spline(List<Vector2> points, List<SplineSegment> splineSegments) : 
         return points;
     }
 
-    public List<Vector2> SpecialPoints() => points;
+    public IEnumerable<Vector2> SpecialPoints() => points;
 }

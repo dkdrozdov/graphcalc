@@ -44,20 +44,6 @@ public class GraphGridControl : UserControl
         set => SetAndRaise(GraphsProperty, ref _graphs, value);
     }
 
-    public static readonly DirectProperty<GraphGridControl, SplinesViewModel?> SplinesProperty =
-        AvaloniaProperty.RegisterDirect<GraphGridControl, SplinesViewModel?>(
-            nameof(Splines),
-            o => o.Splines,
-            (o, v) => o.Splines = v);
-
-    private SplinesViewModel? _splines;
-
-    public SplinesViewModel? Splines
-    {
-        get => _splines;
-        set => SetAndRaise(SplinesProperty, ref _splines, value);
-    }
-
     public static readonly DirectProperty<GraphGridControl, string> LogProperty =
         AvaloniaProperty.RegisterDirect<GraphGridControl, string>(
             nameof(Log),
@@ -309,7 +295,7 @@ public class GraphGridControl : UserControl
                 ];
             DrawPath(context, lineWidth, lineOpacity, Colors.Black, points, brush);
 
-            List<Vector2> specialPoints = graph.SpecialPoints();
+            List<Vector2> specialPoints = [.. graph.SpecialPoints()];
             if (_captured)
             {
                 Vector2? p = graphViewModel.Graph.PointAt(pressedPosition.X);

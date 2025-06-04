@@ -33,7 +33,7 @@ public abstract partial class DrawableGraphViewModel : ObservableObject
     [ObservableProperty]
     private bool _colorPalette;
     public ICommand RemoveCommand { get; }
-    private readonly DrawableGraphsViewModel drawableGraphsViewModel;
+    protected readonly DrawableGraphsViewModel drawableGraphsViewModel;
 
     [RelayCommand]
     private void SetColor(ImmutableSolidColorBrush color)

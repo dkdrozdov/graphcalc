@@ -7,16 +7,16 @@ using MathNet.Numerics.LinearAlgebra;
 
 namespace GraphCalc.Models;
 
-public static class SplineBuilder
+public static class SplineFactory
 {
-    private static Spline BuildQuadraticSplineGlobal(List<Vector2> points, bool natural = true)
+    public static Spline QuadraticSpline(IEnumerable<Vector2> points)
     {
-        Console.Write($"Building spline from {points.Count} points.\n");
+        Console.Write($"Building spline from {points.Count()} points.\n");
 
-        if (points.Count < 2) return new Spline([], []);
-        if (points.Count == 2) return BuildLinearSpline(points);
+        if (points.Count() < 2) return new Spline([], []);
+        if (points.Count() == 2) return LinearSpline(points);
 
-        int segmentsCount = points.Count - 1 - 1; // one segment less because we're treating first two segments as one
+        int segmentsCount = points.Count() - 1 - 1; // one segment less because we're treating first two segments as one
         int vars = segmentsCount * 3;
 
         double[,] A = new double[vars, vars];
@@ -24,27 +24,27 @@ public static class SplineBuilder
 
         // parabola for the first fragment
 
-        A[0, 0] = points[0].X * points[0].X;
-        A[0, 1] = points[0].X;
+        A[0, 0] = points.ElementAt(0).X * points.ElementAt(0).X;
+        A[0, 1] = points.ElementAt(0).X;
         A[0, 2] = 1;
 
-        A[1, 0] = points[1].X * points[1].X;
-        A[1, 1] = points[1].X;
+        A[1, 0] = points.ElementAt(1).X * points.ElementAt(1).X;
+        A[1, 1] = points.ElementAt(1).X;
         A[1, 2] = 1;
 
-        A[2, 0] = points[2].X * points[2].X;
-        A[2, 1] = points[2].X;
+        A[2, 0] = points.ElementAt(2).X * points.ElementAt(2).X;
+        A[2, 1] = points.ElementAt(2).X;
         A[2, 2] = 1;
 
-        B[0] = points[0].Y;
-        B[1] = points[1].Y;
-        B[2] = points[2].Y;
+        B[0] = points.ElementAt(0).Y;
+        B[1] = points.ElementAt(1).Y;
+        B[2] = points.ElementAt(2).Y;
 
         for (int i = 1; i < segmentsCount; i++)
         {
             // points are offset because we're treating first two segments as one
-            var start = points[i + 1];
-            var end = points[i + 2];
+            var start = points.ElementAt(i + 1);
+            var end = points.ElementAt(i + 2);
 
             // first point
             A[i * 3, i * 3] = start.X * start.X;
@@ -95,48 +95,40 @@ public static class SplineBuilder
 
 
         // split first parabolic segment into two segments with the same coefficients
-        splineSegments.Add(new(points[0], points[1], [x[2], x[1], x[0]]));
-        splineSegments.Add(new(points[1], points[2], [x[2], x[1], x[0]]));
+        splineSegments.Add(new(points.ElementAt(0), points.ElementAt(1), [x[2], x[1], x[0]]));
+        splineSegments.Add(new(points.ElementAt(1), points.ElementAt(2), [x[2], x[1], x[0]]));
 
         for (int i = 1; i < segmentsCount; i++)
         {
             double[] coefs = [x[i * 3], x[i * 3 + 1], x[i * 3 + 2]];
             // points are offset because we're treating first two segments as one
-            splineSegments.Add(new(points[i + 1], points[i + 2], [.. coefs.Reverse()]));
+            splineSegments.Add(new(points.ElementAt(i + 1), points.ElementAt(i + 2), [.. coefs.Reverse()]));
         }
 
         return new Spline(points, splineSegments);
     }
 
-    public static Spline BuildQuadraticSpline(List<Vector2> points, bool natural = true)
+    public static Spline CubicSpline(IEnumerable<Vector2> points)
     {
-        return BuildQuadraticSplineGlobal(points, natural);
-
-        // List<SplineSegment> splineSegments = [];
-        // if (points.Count < 2) return new Spline([], []);
-        // if (points.Count == 2) return BuildLinearSpline(points, natural);
-
-
-
-        // return new Spline(points, splineSegments);
+        return new Spline([], []);
     }
 
-    private static Spline BuildLinearSpline(List<Vector2> points)
+    public static Spline LinearSpline(IEnumerable<Vector2> points)
     {
         List<SplineSegment> splineSegments = [];
 
-        if (points.Count < 2) return new Spline([], []);
+        if (points.Count() < 2) return new Spline([], []);
 
-        for (int i = 1; i < points.Count; i++)
+        for (int i = 1; i < points.Count(); i++)
         {
-            var segment = BuildLinearSegment(points[i - 1], points[i]);
+            var segment = LinearSegment(points.ElementAt(i - 1), points.ElementAt(i));
             if (segment != null) splineSegments.Add(segment);
         }
 
         return new Spline(points, splineSegments);
     }
 
-    private static SplineSegment? BuildLinearSegment(Vector2 p1, Vector2 p2)
+    private static SplineSegment? LinearSegment(Vector2 p1, Vector2 p2)
     {
         var x0 = p1.X;
         var x1 = p2.X;

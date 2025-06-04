@@ -14,8 +14,6 @@ namespace GraphCalc.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-
-    public SplinesViewModel Splines { get; }
     public DrawableGraphsViewModel Graphs { get; }
     public ICommand AddFunctionCommand { get; }
     public ICommand AddSplineCommand { get; }
@@ -28,13 +26,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public void AddSpline()
     {
-        Graphs.Graphs.Add(new DrawableSplineViewModel(SplineBuilder.BuildQuadraticSpline([]), Graphs));
+        Graphs.Graphs.Add(new DrawableSplineViewModel(SplineFactory.QuadraticSpline([]), Graphs));
     }
 
 
     public MainWindowViewModel()
     {
-        Splines = new();
         Graphs = new();
         Preferences = new();
 

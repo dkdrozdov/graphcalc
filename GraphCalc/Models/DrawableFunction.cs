@@ -76,7 +76,7 @@ public class DrawableFunction : IDrawableGraph
         return expression;
     }
 
-    public List<Vector2> PointsInBox(double x1, double x2, double y1, double y2, double step)
+    public IEnumerable<Vector2> PointsInBox(double x1, double x2, double y1, double y2, double step)
     {
         List<Vector2> points = [];
         if (Expression == null) return points;
@@ -103,7 +103,7 @@ public class DrawableFunction : IDrawableGraph
         return points;
     }
 
-    public List<Vector2> SpecialPoints() => [];
+    public IEnumerable<Vector2> SpecialPoints() => [];
 
     public Vector2? PointAt(double x)
     {

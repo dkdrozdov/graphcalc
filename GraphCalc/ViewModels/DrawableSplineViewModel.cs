@@ -27,12 +27,22 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
     public ICommand RebuildSplineCommand { get; }
     public ObservableCollection<PointViewModel> SplinePoints { get; }
 
+    [ObservableProperty]
+    SplineFactoryViewModel _selectedSplineFactory;
+
+    [ObservableProperty]
+    bool _splinePointsNotEmpty;
+
+    public ObservableCollection<SplineFactoryViewModel> SplineFactories => drawableGraphsViewModel.SplineFactories;
+
     public DrawableSplineViewModel(IDrawableGraph graph, DrawableGraphsViewModel _drawableGraphsViewModel) : base(graph, _drawableGraphsViewModel)
     {
         SplinePoints = [];
         AddPointCommand = new RelayCommand(AddPoint);
         RemovePointCommand = new RelayCommand(RemovePoint);
         RebuildSplineCommand = new RelayCommand(RebuildSpline);
+        SplinePointsNotEmpty = false;
+        SelectedSplineFactory = drawableGraphsViewModel.SplineFactories.First(x => x.Name.Contains("quadratic"));
     }
 
     public void AddPoint()
@@ -40,7 +50,7 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
         var point = new PointViewModel();
         point.AfterPropertyChanged += RebuildSpline;
         SplinePoints.Add(point);
-
+        SplinePointsNotEmpty = true;
         // RebuildSpline();
     }
 
@@ -53,11 +63,23 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
         last.AfterPropertyChanged -= RebuildSpline;
         SplinePoints.Remove(last);
         RebuildSpline();
+
+        if (SplinePoints.Count == 0)
+            SplinePointsNotEmpty = false;
+    }
+
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (e.PropertyName == nameof(SelectedSplineFactory)) RebuildSpline();
     }
 
     public void RebuildSpline()
     {
-        var spline = SplineBuilder.BuildQuadraticSpline([.. SplinePoints.OrderBy(p => p.X).Select(p => new Vector2((float)p.X, (float)p.Y))]);
+        var spline = SelectedSplineFactory.FactoryMethod([.. SplinePoints.OrderBy(p => p.X).Select(p => new Vector2((float)p.X, (float)p.Y))]);
+
         if (spline != null) Graph = spline;
     }
 
