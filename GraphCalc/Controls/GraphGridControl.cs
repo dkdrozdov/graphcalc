@@ -273,6 +273,7 @@ public class GraphGridControl : UserControl
         if (prefs.ShowAxisNumbers) DrawTicks(context, GridSpacing, 14, 1.0, Colors.Black);
         if (_captured) DrawVertical(context, pressedPosition.X, Colors.Silver, 1.0, 1.0);
         DrawGraphs(context, Graphs);
+        DrawLabels(context, Graphs);
 
         base.Render(context);
 
@@ -314,10 +315,31 @@ public class GraphGridControl : UserControl
                 Vector2? p = graphViewModel.Graph.PointAt(pressedPosition.X);
                 if (p != null)
                 {
-                    specialPoints.Add((Vector2)p);
+                    specialPoints = [.. specialPoints, (Vector2)p];
+                }
+            }
 
+            foreach (var point in specialPoints ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y));
+        }
+
+    }
+
+    private void DrawLabels(DrawingContext context, DrawableGraphsViewModel? graphs)
+    {
+        if (_captured)
+        {
+            foreach (var graphViewModel in graphs?.Graphs.Where(x => !x.IsHidden) ?? [])
+            {
+                var graph = graphViewModel.Graph;
+                var lineWidth = graphViewModel.LineWidth;
+                var lineOpacity = graphViewModel.LineOpacity;
+                var brush = graphViewModel.Brush;
+
+                Vector2? p = graphViewModel.Graph.PointAt(pressedPosition.X);
+                if (p != null)
+                {
                     var formattedText = new FormattedText(
-                            $"({pressedPosition.X:G2}, {pressedPosition.Y:G2})",
+                            $"({pressedPosition.X:G2}, {((Vector2)p).Y:G2})",
                             CultureInfo.InvariantCulture,
                             FlowDirection.LeftToRight,
                             new Typeface(Typeface.Default.FontFamily, FontStyle.Normal, FontWeight.DemiBold, FontStretch.Normal),
@@ -325,13 +347,19 @@ public class GraphGridControl : UserControl
                             brush);
 
                     var textSize = new Size(formattedText.Width, formattedText.Height);
+                    context.DrawRectangle(
+                        new SolidColorBrush(Colors.White, 0.8),
+                        new Pen(brush, 0.8),
+                        new Rect(new Point(CanvasToLocal(pressedPosition.X, 0).X,
+                                            CanvasToLocal(0, ((Vector2)p).Y).Y), textSize),
+                        3,
+                        3);
+
                     context.DrawText(
                         formattedText,
-                        new Point(CanvasToLocal(pressedPosition.X, 0).X /*+ textSize.Width*/, CanvasToLocal(0, ((Vector2)p).X).Y));
+                        new Point(CanvasToLocal(pressedPosition.X, 0).X /*+ textSize.Width*/, CanvasToLocal(0, ((Vector2)p).Y).Y));
                 }
             }
-
-            foreach (var point in specialPoints ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y));
         }
     }
 
