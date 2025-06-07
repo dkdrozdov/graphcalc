@@ -10,37 +10,10 @@ public class SplineCalculationResult(bool exists, double value)
     public bool Exists { get; } = exists; public double Value { get; } = value;
 }
 
-public class SplineSegment(Vector2 start, Vector2 end, List<double> coefficients)
-{
-    public Vector2 Start { get; } = start;
-    public Vector2 End { get; } = end;
-
-    // a0*x^0 + a1*x^1 + a2*x^2 ...
-    List<double> Coefficients { get; } = coefficients;
-
-    public double? Calculate(double x, bool includeLeft, bool includeRight)
-    {
-        Func<double, bool> checkLeft = includeLeft ? ((double x) => Start.X <= x) : ((double x) => Start.X < x);
-        Func<double, bool> checkRight = includeRight ? ((double x) => x <= End.X) : ((double x) => x < End.X);
-        if (!(checkLeft(x) && checkRight(x))) return null;
-
-        int power = 0;
-        double sum = 0;
-
-        foreach (var coef in Coefficients)
-        {
-            sum += coef * Math.Pow(x, power);
-            power++;
-        }
-
-        return sum;
-    }
-}
-
-public class Spline(IEnumerable<Vector2> points, List<SplineSegment> splineSegments) : IDrawableGraph
+public class Spline(IEnumerable<Vector2> points, IEnumerable<ISplineSegment> splineSegments) : IDrawableGraph
 {
     public List<Vector2> Points { get; } = [.. points.OrderBy(x => x.X)];
-    public List<SplineSegment> SplineSegments { get; } = splineSegments;
+    public IEnumerable<ISplineSegment> SplineSegments { get; } = splineSegments;
 
     public SplineCalculationResult Calculate(double x)
     {
@@ -89,8 +62,6 @@ public class Spline(IEnumerable<Vector2> points, List<SplineSegment> splineSegme
                 Console.WriteLine(exception);
             }
         });
-
-        // points = [.. points.Concat(Points).OrderBy(x => x.X)];
 
         return points;
     }

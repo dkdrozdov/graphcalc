@@ -9,12 +9,12 @@ namespace GraphCalc.Models;
 
 public static class SplineFactory
 {
-    public static Spline QuadraticSpline(IEnumerable<Vector2> points)
+    public static Spline QuadraticInterpolationSpline(IEnumerable<Vector2> points)
     {
         Console.Write($"Building spline from {points.Count()} points.\n");
 
         if (points.Count() < 2) return new Spline([], []);
-        if (points.Count() == 2) return LinearSpline(points);
+        if (points.Count() == 2) return LagrangeInterpolationSpline(points);
 
         int segmentsCount = points.Count() - 1 - 1; // one segment less because we're treating first two segments as one
         int vars = segmentsCount * 3;
@@ -91,7 +91,7 @@ public static class SplineFactory
         var matB = MathNet.Numerics.LinearAlgebra.Vector<double>.Build.Dense(B);
         var x = matA.Solve(matB);
 
-        List<SplineSegment> splineSegments = [];
+        List<PolynomialSplineSegment> splineSegments = [];
 
 
         // split first parabolic segment into two segments with the same coefficients
@@ -108,14 +108,26 @@ public static class SplineFactory
         return new Spline(points, splineSegments);
     }
 
-    public static Spline CubicSpline(IEnumerable<Vector2> points)
+    public static Spline LagrangeInterpolationSpline(IEnumerable<Vector2> points)
     {
-        return new Spline([], []);
+        Console.Write($"Building spline from {points.Count()} points.\n");
+
+        if (points.Count() < 2) return new Spline([], []);
+        if (points.Count() == 2) return LinearInterpolationSpline(points);
+
+        int segmentsCount = points.Count() - 1;
+
+        List<LagrangeSplineSegment> splineSegments = [];
+
+        for (int i = 0; i < segmentsCount; i++)
+            splineSegments.Add(new(points.ElementAt(i), points.ElementAt(i + 1), points));
+
+        return new Spline(points, splineSegments);
     }
 
-    public static Spline LinearSpline(IEnumerable<Vector2> points)
+    public static Spline LinearInterpolationSpline(IEnumerable<Vector2> points)
     {
-        List<SplineSegment> splineSegments = [];
+        List<PolynomialSplineSegment> splineSegments = [];
 
         if (points.Count() < 2) return new Spline([], []);
 
@@ -128,7 +140,7 @@ public static class SplineFactory
         return new Spline(points, splineSegments);
     }
 
-    private static SplineSegment? LinearSegment(Vector2 p1, Vector2 p2)
+    private static PolynomialSplineSegment? LinearSegment(Vector2 p1, Vector2 p2)
     {
         var x0 = p1.X;
         var x1 = p2.X;
@@ -145,6 +157,92 @@ public static class SplineFactory
         coefficients.Add(c);
         coefficients.Add(b);
 
-        return new SplineSegment(p1, p2, coefficients);
+        return new PolynomialSplineSegment(p1, p2, coefficients);
     }
+
+    private static double CalculateTangentLagrangeMiddle(Vector2 prev, Vector2 current, Vector2 next)
+    {
+        var hprev = current.X - prev.X;
+        var h = next.X - current.X;
+
+        return -h / (hprev * (hprev + h)) * prev.Y
+                - (hprev - h) / (hprev * h) * current.Y
+                + hprev / (h * (hprev + h)) * next.Y;
+    }
+
+    private static double CalculateTangentLagrangeLeft(Vector2 p1, Vector2 p2, Vector2 p3)
+    {
+        var h1 = p2.X - p1.X;
+        var h2 = p3.X - p2.X;
+
+        return -(2 * h1 + h2) / (h1 * (h1 + h2)) * p1.Y
+                + (h1 + h2) / (h1 * h2) * p2.Y
+                - h1 / ((h1 + h2) * h2) * p3.Y;
+    }
+
+    private static double CalculateTangentLagrangeRight(Vector2 p1, Vector2 p2, Vector2 p3)
+    {
+        var h1 = p2.X - p1.X;
+        var h2 = p3.X - p2.X;
+
+        return h2 / (h1 * (h1 + h2)) * p1.Y
+                - (h1 + h2) / (h1 * h2) * p2.Y
+                + (2 * h2 + h1) / (h2 * (h1 + h2)) * p3.Y;
+    }
+
+
+    private static double CalculateTangentLagrange(Vector2? pm2, Vector2? pm1, Vector2 p1, Vector2? p2, Vector2? p3)
+    {
+        {
+            if (pm1 is Vector2 prev && p2 is Vector2 next) return CalculateTangentLagrangeMiddle(prev, p1, next);
+        }
+
+        {
+            if (pm1 == null && p2 is Vector2 pp2 && p3 is Vector2 pp3) return CalculateTangentLagrangeLeft(p1, pp2, pp3);
+        }
+
+        {
+            if (p2 == null && pm1 is Vector2 prev && pm2 is Vector2 prevprev) return CalculateTangentLagrangeRight(prevprev, prev, p1);
+        }
+
+        return 0;
+    }
+
+    private static Vector2? ElementAtOrNull(IEnumerable<Vector2> points, int index)
+    {
+        var count = points.Count();
+
+        if (index < 0 || index >= count) return null;
+        return points.ElementAt(index);
+    }
+
+    public static Spline HermitCubicInterpolationSpline(IEnumerable<Vector2> points)
+    {
+        Console.Write($"Building spline from {points.Count()} points.\n");
+
+        if (points.Count() < 2) return new Spline([], []);
+        if (points.Count() == 2) return LinearInterpolationSpline(points);
+
+        int segmentsCount = points.Count() - 1;
+        List<HermiteSplineSegment> segments = [];
+
+        for (int i = 0; i < segmentsCount; i++)
+        {
+            Vector2 p = points.ElementAt(i);
+            Vector2 p1 = points.ElementAt(i + 1);
+            Vector2? pm1 = ElementAtOrNull(points, i - 1);
+            Vector2? pm2 = ElementAtOrNull(points, i - 2);
+            Vector2? p2 = ElementAtOrNull(points, i + 2);
+            Vector2? p3 = ElementAtOrNull(points, i + 3);
+
+            var startTangent = CalculateTangentLagrange(pm2, pm1, p, p1, p2);
+            var endTangent = CalculateTangentLagrange(pm1, p, p1, p2, p3);
+
+            segments.Add(new(p, p1, startTangent, endTangent));
+        }
+
+
+        return new Spline(points, segments);
+    }
+
 }

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
@@ -42,16 +43,27 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
         RemovePointCommand = new RelayCommand(RemovePoint);
         RebuildSplineCommand = new RelayCommand(RebuildSpline);
         SplinePointsNotEmpty = false;
-        SelectedSplineFactory = drawableGraphsViewModel.SplineFactories.First(x => x.Name.Contains("quadratic"));
+        SelectedSplineFactory = drawableGraphsViewModel.SplineFactories.First(x => x.Name.Contains("lagrange", StringComparison.CurrentCultureIgnoreCase));
+    }
+
+    public void AddPoint(double x, double y)
+    {
+        var point = new PointViewModel
+        {
+            X = x,
+            Y = y
+        };
+
+        point.AfterPropertyChanged += RebuildSpline;
+        SplinePoints.Add(point);
+        SplinePointsNotEmpty = true;
+
+        RebuildSpline();
     }
 
     public void AddPoint()
     {
-        var point = new PointViewModel();
-        point.AfterPropertyChanged += RebuildSpline;
-        SplinePoints.Add(point);
-        SplinePointsNotEmpty = true;
-        // RebuildSpline();
+        AddPoint(0, 0);
     }
 
     public void RemovePoint()

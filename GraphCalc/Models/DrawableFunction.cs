@@ -113,7 +113,7 @@ public class DrawableFunction : IDrawableGraph
         try
         {
             var result = compiledExpression(new { x = (float)x });
-            return new Vector2((float)x, (float)result);
+            if (!double.IsNaN(result)) return new Vector2((float)x, (float)result);
         }
         catch (Exception exception)
         {

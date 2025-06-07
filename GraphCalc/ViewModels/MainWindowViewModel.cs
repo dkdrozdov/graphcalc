@@ -26,7 +26,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public void AddSpline()
     {
-        Graphs.Graphs.Add(new DrawableSplineViewModel(SplineFactory.QuadraticSpline([]), Graphs));
+        Graphs.Graphs.Add(new DrawableSplineViewModel(SplineFactory.LagrangeInterpolationSpline([]), Graphs));
     }
 
 
@@ -38,7 +38,14 @@ public partial class MainWindowViewModel : ViewModelBase
         AddFunctionCommand = new RelayCommand(AddFunction);
         AddSplineCommand = new RelayCommand(AddSpline);
 
-        AddFunction();
+        AddSpline();
+        if (Graphs.Graphs.First() is DrawableSplineViewModel drawableSplineViewModel)
+        {
+            drawableSplineViewModel.AddPoint(1, 1);
+            drawableSplineViewModel.AddPoint(2, 2);
+            drawableSplineViewModel.AddPoint(3, 1);
+            drawableSplineViewModel.SelectedSplineFactory = Graphs.SplineFactories.First(x => x.Name.Contains("cubic", System.StringComparison.CurrentCultureIgnoreCase));
+        }
     }
 
 
