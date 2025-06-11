@@ -18,4 +18,5 @@ namespace GraphCalc.ViewModels
             FactoryMethod = factoryMethod;
         }
     }
+
 }

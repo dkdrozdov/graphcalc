@@ -3,12 +3,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Avalonia.Controls.Platform;
+using DialogHostAvalonia.Utilities;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace GraphCalc.Models;
 
 public static class SplineFactory
 {
+    public static ParametricSpline ParametricSpline(IEnumerable<Vector2> points, Func<IEnumerable<Vector2>, Spline> factoryMethod)
+    {
+        if (points.Count() < 2) return new ParametricSpline([], new Spline([], []), new Spline([], []), []);
+
+        IEnumerable<KeyValuePair<double, Vector2>> parametrizedPoints = [];
+
+        double tprev = 0;
+        Vector2 prevPoint = points.First();
+
+        parametrizedPoints = parametrizedPoints.Append(new(0, points.First()));
+
+        foreach (var point in points.Skip(1))
+        {
+            var dx = prevPoint.X - point.X;
+            var dy = prevPoint.Y - point.Y;
+
+            double length = Math.Sqrt(Math.Pow(dx, 2) + Math.Pow(dy, 2));
+            double t = tprev + length;
+
+            parametrizedPoints = parametrizedPoints.Append(new(t, point));
+
+            tprev = t;
+            prevPoint = point;
+        }
+
+        return new ParametricSpline(points, factoryMethod(parametrizedPoints.Select(p => new Vector2((float)p.Key, p.Value.X))),
+            factoryMethod(parametrizedPoints.Select(p => new Vector2((float)p.Key, p.Value.Y))), parametrizedPoints);
+    }
+
+
     public static Spline QuadraticInterpolationSpline(IEnumerable<Vector2> points)
     {
         Console.Write($"Building spline from {points.Count()} points.\n");

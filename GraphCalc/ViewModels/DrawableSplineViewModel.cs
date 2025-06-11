@@ -34,6 +34,9 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
     [ObservableProperty]
     bool _splinePointsNotEmpty;
 
+    [ObservableProperty]
+    bool _isParametric;
+
     public ObservableCollection<SplineFactoryViewModel> SplineFactories => drawableGraphsViewModel.SplineFactories;
 
     public DrawableSplineViewModel(IDrawableGraph graph, DrawableGraphsViewModel _drawableGraphsViewModel) : base(graph, _drawableGraphsViewModel)
@@ -43,6 +46,7 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
         RemovePointCommand = new RelayCommand(RemovePoint);
         RebuildSplineCommand = new RelayCommand(RebuildSpline);
         SplinePointsNotEmpty = false;
+        IsParametric = false;
         SelectedSplineFactory = drawableGraphsViewModel.SplineFactories.First(x => x.Name.Contains("lagrange", StringComparison.CurrentCultureIgnoreCase));
     }
 
@@ -86,11 +90,17 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
         base.OnPropertyChanged(e);
 
         if (e.PropertyName == nameof(SelectedSplineFactory)) RebuildSpline();
+        if (e.PropertyName == nameof(IsParametric)) RebuildSpline();
     }
+
 
     public void RebuildSpline()
     {
-        var spline = SelectedSplineFactory.FactoryMethod([.. SplinePoints.OrderBy(p => p.X).Select(p => new Vector2((float)p.X, (float)p.Y))]);
+        IDrawableGraph? spline;
+        if (IsParametric)
+            spline = SplineFactory.ParametricSpline(SplinePoints.Select(p => new Vector2((float)p.X, (float)p.Y)), SelectedSplineFactory.FactoryMethod);
+        else
+            spline = SelectedSplineFactory.FactoryMethod([.. SplinePoints.OrderBy(p => p.X).Select(p => new Vector2((float)p.X, (float)p.Y))]);
 
         if (spline != null) Graph = spline;
     }

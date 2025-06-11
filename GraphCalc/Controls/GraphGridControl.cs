@@ -162,8 +162,8 @@ public class GraphGridControl : UserControl
 
     private double GetLeftBorder() => -(Bounds.Center.X + OffsetX) / (ZoomX * coordinateUnit);
     private double GetRightBorder() => -(-Bounds.Center.X + OffsetX) / (ZoomX * coordinateUnit);
-    private double GetTopBorder() => -(Bounds.Center.Y + OffsetY) / (ZoomY * coordinateUnit);
-    private double GetBottomBorder() => -(Bounds.Center.Y + OffsetY) / (ZoomY * coordinateUnit);
+    private double GetTopBorder() => (Bounds.Center.Y + OffsetY) / (ZoomY * coordinateUnit);
+    private double GetBottomBorder() => (-Bounds.Center.Y + OffsetY) / (ZoomY * coordinateUnit);
 
     private void DrawGrid(DrawingContext context, double gridLinesDistance, double thickness, double opacity, Color color)
     {
