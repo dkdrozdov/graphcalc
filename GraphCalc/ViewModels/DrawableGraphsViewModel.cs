@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using GraphCalc.Models;
 
@@ -15,4 +17,11 @@ public class DrawableGraphsViewModel : ObservableObject
             new("Cubic Hermite interpolation spline", SplineFactory.HermitCubicInterpolationSpline)
         ];
 
+    public void SelectEdit(DrawableGraphViewModel drawableGraphViewModel)
+    {
+        foreach (var g in Graphs.OfType<DrawableSplineViewModel>())
+        {
+            if (g != drawableGraphViewModel) g.IsEditSelected = false;
+        }
+    }
 }

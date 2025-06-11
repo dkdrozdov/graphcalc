@@ -32,6 +32,7 @@ public abstract partial class DrawableGraphViewModel : ObservableObject
     private SolidColorBrush _brush;
     [ObservableProperty]
     private bool _colorPalette;
+
     public ICommand RemoveCommand { get; }
     protected readonly DrawableGraphsViewModel drawableGraphsViewModel;
 
@@ -51,6 +52,7 @@ public abstract partial class DrawableGraphViewModel : ObservableObject
         drawableGraphsViewModel = _drawableGraphsViewModel;
         IsHidden = false;
     }
+
 
     public void Remove()
     {

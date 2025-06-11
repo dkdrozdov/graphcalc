@@ -256,7 +256,7 @@ public class GraphGridControl : UserControl
             DrawGrid(context, GridSpacing, 1.0, 1.0, Colors.Silver);
         }
         DrawAxes(context, 1.1, 1.0, Colors.Black);
-        if (_captured) DrawVertical(context, pressedPosition.X, Colors.Silver, 1.0, 1.0);
+        if (_captured && _isValueAtPointButtonPressed) DrawVertical(context, pressedPosition.X, Colors.Silver, 1.0, 1.0);
         DrawGraphs(context, Graphs);
         if (prefs.ShowAxisNumbers) DrawTicks(context, GridSpacing, 14, 1.0, Colors.Black);
         DrawLabels(context, Graphs);
@@ -296,7 +296,7 @@ public class GraphGridControl : UserControl
             DrawPath(context, lineWidth, points, brush);
 
             List<Vector2> specialPoints = [.. graph.SpecialPoints()];
-            if (_captured)
+            if (_captured && _isValueAtPointButtonPressed)
             {
                 Vector2? p = graphViewModel.Graph.PointAt(pressedPosition.X);
                 if (p != null)
@@ -312,7 +312,7 @@ public class GraphGridControl : UserControl
 
     private void DrawLabels(DrawingContext context, DrawableGraphsViewModel? graphs)
     {
-        if (_captured)
+        if (_captured && _isValueAtPointButtonPressed)
         {
             foreach (var graphViewModel in graphs?.Graphs.Where(x => !x.IsHidden) ?? [])
             {
@@ -426,13 +426,20 @@ public class GraphGridControl : UserControl
         }
     }
 
+    private bool _isDragging;
+    private bool _isValueAtPointButtonPressed;
+
     public void Pressed(PointerPressedEventArgs e)
     {
         PointerPointProperties properties = e.GetCurrentPoint(this).Properties;
-        if (!properties.IsRightButtonPressed)
+        if (!(properties.IsRightButtonPressed || properties.IsLeftButtonPressed))
             return;
 
+        if (properties.IsRightButtonPressed) _isValueAtPointButtonPressed = true;
+
         _captured = true;
+        _isDragging = false;
+        _deltaDragged = 0;
 
         return;
     }
@@ -440,9 +447,29 @@ public class GraphGridControl : UserControl
     public void Released(PointerReleasedEventArgs e)
     {
         _captured = false;
+        _isValueAtPointButtonPressed = false;
+
+        if (!_isDragging) ClickedLocal(e.GetPosition(this));
 
         return;
     }
+
+    private void ClickedLocal(Point point)
+    {
+        var xCanvas = (point.X - Bounds.Center.X - OffsetX) / (ZoomX * coordinateUnit);
+        var yCanvas = -(point.Y - Bounds.Center.Y - OffsetY) / (ZoomY * coordinateUnit);
+
+        ClickedCanvas(new Vector2((float)xCanvas, (float)yCanvas));
+    }
+
+    private void ClickedCanvas(Vector2 point)
+    {
+        foreach (var g in Graphs?.Graphs.OfType<DrawableSplineViewModel>() ?? [])
+            if (g.IsEditSelected) g.AddPoint(point.X, point.Y);
+    }
+
+    private double _deltaDragged;
+    private Point _previousPoint;
 
     public void Moved(PointerEventArgs e)
     {
@@ -452,6 +479,17 @@ public class GraphGridControl : UserControl
         var yCanvas = -(position.Y - Bounds.Center.Y - OffsetY) / (ZoomY * coordinateUnit);
 
         pressedPosition = new Point(xCanvas, yCanvas);
+
+        if (_captured)
+        {
+            _deltaDragged += Math.Sqrt(Math.Pow(_previousPoint.X - position.X, 2) + Math.Pow(_previousPoint.Y - position.Y, 2));
+            if (_deltaDragged > 0.1)
+            {
+                _isDragging = true;
+            }
+
+        }
+        _previousPoint = position;
 
         return;
     }

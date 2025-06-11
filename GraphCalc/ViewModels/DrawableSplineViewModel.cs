@@ -30,10 +30,10 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
 
     [ObservableProperty]
     SplineFactoryViewModel _selectedSplineFactory;
-
+    [ObservableProperty]
+    bool _isEditSelected;
     [ObservableProperty]
     bool _splinePointsNotEmpty;
-
     [ObservableProperty]
     bool _isParametric;
 
@@ -64,6 +64,11 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
 
         RebuildSpline();
     }
+    
+    private void UpdateEditSelected()
+    {
+        if (IsEditSelected) drawableGraphsViewModel.SelectEdit(this);
+    }
 
     public void AddPoint()
     {
@@ -91,6 +96,7 @@ public partial class DrawableSplineViewModel : DrawableGraphViewModel
 
         if (e.PropertyName == nameof(SelectedSplineFactory)) RebuildSpline();
         if (e.PropertyName == nameof(IsParametric)) RebuildSpline();
+        if (e.PropertyName == nameof(IsEditSelected)) UpdateEditSelected();
     }
 
 
