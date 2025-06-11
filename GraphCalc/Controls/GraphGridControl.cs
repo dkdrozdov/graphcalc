@@ -221,12 +221,12 @@ public class GraphGridControl : UserControl
     }
 
 
-    public static void DrawPoint(DrawingContext context, Point p)
+    public static void DrawPoint(DrawingContext context, Point p, IBrush brush, double size)
     {
-        context.DrawEllipse(new SolidColorBrush(Colors.Black, 1.0), null, p, 3, 3);
+        context.DrawEllipse(brush, null, p, size, size);
     }
 
-    public static void DrawPath(DrawingContext context, double thickness, double opacity, Color color, List<Point> points, IBrush brush)
+    public static void DrawPath(DrawingContext context, double thickness, List<Point> points, IBrush brush)
     {
         if (points.Count < 2) return;
 
@@ -256,9 +256,9 @@ public class GraphGridControl : UserControl
             DrawGrid(context, GridSpacing, 1.0, 1.0, Colors.Silver);
         }
         DrawAxes(context, 1.1, 1.0, Colors.Black);
-        if (prefs.ShowAxisNumbers) DrawTicks(context, GridSpacing, 14, 1.0, Colors.Black);
         if (_captured) DrawVertical(context, pressedPosition.X, Colors.Silver, 1.0, 1.0);
         DrawGraphs(context, Graphs);
+        if (prefs.ShowAxisNumbers) DrawTicks(context, GridSpacing, 14, 1.0, Colors.Black);
         DrawLabels(context, Graphs);
 
         base.Render(context);
@@ -293,7 +293,7 @@ public class GraphGridControl : UserControl
                                       GraphResolution / ZoomX )
                         .Select(p => CanvasToLocal(p.X, p.Y))
                 ];
-            DrawPath(context, lineWidth, lineOpacity, Colors.Black, points, brush);
+            DrawPath(context, lineWidth, points, brush);
 
             List<Vector2> specialPoints = [.. graph.SpecialPoints()];
             if (_captured)
@@ -305,7 +305,7 @@ public class GraphGridControl : UserControl
                 }
             }
 
-            foreach (var point in specialPoints ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y));
+            foreach (var point in specialPoints ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y), brush, 2.2 * Math.Sqrt(lineWidth));
         }
 
     }

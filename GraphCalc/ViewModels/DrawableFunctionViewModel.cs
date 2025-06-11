@@ -47,9 +47,5 @@ public partial class DrawableFunctionViewModel(IDrawableGraph graph, DrawableGra
             ExpressionLogNotEmpty = resultMessage != "";
 
         }
-        if (e.PropertyName == nameof(LineOpacity))
-        {
-            Brush = new SolidColorBrush(Colors.Black, LineOpacity);
-        }
     }
 }

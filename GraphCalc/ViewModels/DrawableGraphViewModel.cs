@@ -29,27 +29,27 @@ public abstract partial class DrawableGraphViewModel : ObservableObject
     [ObservableProperty]
     private bool _isHidden;
     [ObservableProperty]
-    private IBrush _brush;
+    private SolidColorBrush _brush;
     [ObservableProperty]
     private bool _colorPalette;
     public ICommand RemoveCommand { get; }
     protected readonly DrawableGraphsViewModel drawableGraphsViewModel;
 
     [RelayCommand]
-    private void SetColor(ImmutableSolidColorBrush color)
+    private void SetColor(ISolidColorBrush color)
     {
-        Brush = color;
+        Brush.Color = color.Color;
     }
 
     public DrawableGraphViewModel(IDrawableGraph graph, DrawableGraphsViewModel _drawableGraphsViewModel)
     {
         Graph = graph;
         LineWidth = 2;
+        Brush = new SolidColorBrush(Colors.Black, 1);
         LineOpacity = 1;
         RemoveCommand = new RelayCommand(Remove);
         drawableGraphsViewModel = _drawableGraphsViewModel;
         IsHidden = false;
-        Brush = new SolidColorBrush(Colors.Black, LineOpacity);
     }
 
     public void Remove()
@@ -58,4 +58,10 @@ public abstract partial class DrawableGraphViewModel : ObservableObject
     }
 
     public abstract Task ParseStringInputAsync(string? content);
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+        if (e.PropertyName == nameof(LineOpacity)) Brush.Opacity = LineOpacity;
+    }
 }
