@@ -76,7 +76,7 @@ public class Spline(IEnumerable<Vector2> points, IEnumerable<ISplineSegment> spl
 
 public class ParametricSpline(IEnumerable<Vector2> points, Spline xSpline, Spline ySpline, IEnumerable<KeyValuePair<double, Vector2>> parametrizedPoints) : IDrawableGraph
 {
-    public List<Vector2> Points { get; } = [.. points.OrderBy(x => x.X)];
+    public List<Vector2> Points { get; } = [.. points];
     Spline XSpline = xSpline;
     Spline YSpline = ySpline;
     IEnumerable<KeyValuePair<double, Vector2>> _parametrizedPoints = parametrizedPoints;
@@ -93,7 +93,7 @@ public class ParametricSpline(IEnumerable<Vector2> points, Spline xSpline, Splin
 
     public Vector2? PointAt(double x)
     {
-        return YSpline.PointAt(x);
+        return null;
     }
 
     public IEnumerable<Vector2> PointsInBox(double x1, double x2, double y1, double y2, double step)

@@ -90,17 +90,16 @@
                         <CheckBox Content="Show X axis" IsChecked="{Binding Preferences.ShowXAxis}" />
                         <CheckBox Content="Show Y axis" IsChecked="{Binding Preferences.ShowYAxis}" />
                         <Label Margin="10,0,0,5" HorizontalAlignment="Right" Content="Graph Properties" Foreground="Gray" />
-                        <Grid ColumnDefinitions="*, 40">
-                            <TextBlock Grid.Column="0" Text="Render Step" />
-                            <TextBlock Grid.Column="1" Text="{Binding #RenderStepSlider.Value, StringFormat={}{0:F2}}" />
+                        <Grid ColumnDefinitions="Auto, *">
+                            <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="Render Step" />
+                            <TextBox
+                                Grid.Column="1"
+                                Height="20"
+                                Margin="20,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalContentAlignment="Center"
+                                Text="{Binding Preferences.RenderStep, UpdateSourceTrigger=LostFocus}" />
                         </Grid>
-                        <Slider
-                            Name="RenderStepSlider"
-                            IsSnapToTickEnabled="True"
-                            Maximum="1.0"
-                            Minimum="0.01"
-                            TickFrequency="0.01"
-                            Value="{Binding Preferences.RenderStep}" />
                     </StackPanel>
                     <ScrollViewer IsVisible="{Binding !#GridSettingsToggleButton.IsChecked}">
                         <StackPanel Margin="8,8,18,8">

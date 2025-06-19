@@ -30,7 +30,7 @@ public class EmptyStringToZeroDoubleConverter : IValueConverter
     {
         if (value is string stringValue)
         {
-            if (string.IsNullOrWhiteSpace(stringValue))
+            if (string.IsNullOrWhiteSpace(stringValue) || stringValue=="-")
             {
                 return 0.0;
             }

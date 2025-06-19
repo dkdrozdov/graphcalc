@@ -10,6 +10,7 @@ using System.Linq;
 using System.Globalization;
 using Avalonia.Input;
 using System.Numerics;
+using Avalonia.Controls.Shapes;
 
 namespace GraphCalc.Controls;
 
@@ -230,12 +231,29 @@ public class GraphGridControl : UserControl
     {
         if (points.Count < 2) return;
 
-        var prev = points.First();
-        foreach (var point in points.Skip(1))
+        IEnumerable<IEnumerable<Point>> segments = [];
+
+        int start = 0;
+        int finish = 0;
+        foreach (var p in points)
         {
-            context.DrawLine(new Pen(brush, thickness), prev, point);
-            prev = point;
+            if (double.IsInfinity(p.Y) || double.IsNaN(p.Y))
+            {
+                segments = segments.Append(points[start..finish]);
+                start = finish + 1;
+            }
+            finish++;
         }
+        segments = segments.Append(points[start..finish]);
+
+        foreach (var s in segments)
+            context.DrawGeometry(brush, new Pen(brush, thickness), new PolylineGeometry(s, false));
+        // var prev = points.First();
+        // foreach (var point in points.Skip(1))
+        // {
+        //     context.DrawLine(new Pen(brush, thickness), prev, point);
+        //     prev = point;
+        // }
     }
 
     public Point CanvasToLocal(double x, double y)
@@ -243,8 +261,11 @@ public class GraphGridControl : UserControl
         var viewCenter = Bounds.Center;
         var canvasOffset = new Point(OffsetX, OffsetY) + viewCenter;
 
-        return new Point(canvasOffset.X + x * ZoomX * coordinateUnit,
+        Point point = new(canvasOffset.X + x * ZoomX * coordinateUnit,
                          canvasOffset.Y - y * ZoomY * coordinateUnit);
+
+        if (point.Y > Bounds.Bottom || point.Y < Bounds.Top) return point.WithY(double.NaN);
+        return point;
     }
 
     public override void Render(DrawingContext context)
@@ -305,7 +326,7 @@ public class GraphGridControl : UserControl
                 }
             }
 
-            foreach (var point in specialPoints ?? []) DrawPoint(context, CanvasToLocal(point.X, point.Y), brush, 2.2 * Math.Sqrt(lineWidth));
+            foreach (var point in (specialPoints ?? []).Where(p => !double.IsNaN(CanvasToLocal(p.X, p.Y).Y))) DrawPoint(context, CanvasToLocal(point.X, point.Y), brush, 2.2 * Math.Sqrt(lineWidth));
         }
 
     }
@@ -322,7 +343,7 @@ public class GraphGridControl : UserControl
                 var brush = graphViewModel.Brush;
 
                 Vector2? p = graphViewModel.Graph.PointAt(pressedPosition.X);
-                if (p != null)
+                if (p != null && !double.IsNaN(CanvasToLocal(p.Value.X, p.Value.Y).Y))
                 {
                     var formattedText = new FormattedText(
                             $"({pressedPosition.X:G2}, {((Vector2)p).Y:G2})",

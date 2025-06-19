@@ -18,7 +18,7 @@ namespace GraphCalc.ViewModels;
 public partial class PreferencesViewModel : ViewModelBase
 {
     [ObservableProperty]
-    double _renderStep = 0.02;
+    double _renderStep = 0.002;
 
     [ObservableProperty]
     bool _showGridlines = true;
@@ -31,6 +31,20 @@ public partial class PreferencesViewModel : ViewModelBase
     bool _showXAxis = true;
     [ObservableProperty]
     bool _showYAxis = true;
+
+
+    protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+    {
+        base.OnPropertyChanged(e);
+
+        if (e.PropertyName == nameof(RenderStep))
+        {
+            if (RenderStep < 0.0001)
+            {
+                RenderStep = 0.0001;
+            }
+        }
+    }
 
     public PreferencesViewModel()
     {
