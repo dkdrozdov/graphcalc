@@ -51,13 +51,71 @@ public class Spline(IEnumerable<Vector2> points, IEnumerable<ISplineSegment> spl
         grid = [.. grid.Concat(Points.Select(p => (double)p.X)).OrderBy(x => x)];
         grid = [.. grid.Where(x => x >= Points.First().X && x <= Points.Last().X)];
 
+        bool isOnScreen = true;
+        bool isPrevOnScreen = true;
+
+        bool outOfScreenBottom = false;
+        bool outOfScreenLeft = false;
+        bool outOfScreenTop = false;
+        bool outOfScreenRight = false;
+
+        bool prevOutOfScreenBottom = false;
+        bool prevOutOfScreenLeft = false;
+        bool prevOutOfScreenTop = false;
+        bool prevOutOfScreenRight = false;
+
+        bool gap = false;
+        bool prevGap = false;
+
+        double prevTick = grid.First();
+
         grid.ForEach(tick =>
         {
             try
             {
-                var result = Calculate(tick);
-                if (result.Exists)
-                    points.Add(new Vector2((float)tick, (float)result.Value));
+                var splineCalculationResult = Calculate(tick);
+                var result = (float)splineCalculationResult.Value;
+
+                isPrevOnScreen = isOnScreen;
+                prevOutOfScreenBottom = outOfScreenBottom;
+                prevOutOfScreenLeft = outOfScreenLeft;
+                prevOutOfScreenTop = outOfScreenTop;
+                prevOutOfScreenRight = outOfScreenRight;
+                prevGap = gap;
+
+                isOnScreen = tick <= x2 && tick >= x1 && (float)result <= y2 && (float)result >= y1;
+
+                if (!isOnScreen)
+                {
+                    outOfScreenBottom = result < y1;
+                    outOfScreenLeft = tick < x1;
+                    outOfScreenTop = result > y2;
+                    outOfScreenRight = tick > x2;
+                }
+                else
+                {
+                    outOfScreenBottom = false;
+                    outOfScreenLeft = false;
+                    outOfScreenTop = false;
+                    outOfScreenRight = false;
+                }
+
+                gap = prevOutOfScreenBottom && outOfScreenTop || prevOutOfScreenLeft && outOfScreenRight ||
+                    prevOutOfScreenTop && outOfScreenBottom || prevOutOfScreenRight && outOfScreenLeft;
+
+                if (gap)
+                    points.Add(new Vector2((float)prevTick + (float)step / 2f, float.NaN));
+
+                if (!isPrevOnScreen && isOnScreen)
+                {
+                    var prevResult = Calculate(prevTick);
+                    points.Add(new Vector2((float)prevTick, (float)prevResult.Value));
+                }
+
+                if (splineCalculationResult.Exists)
+                    points.Add(new Vector2((float)tick, (float)splineCalculationResult.Value));
+
+                prevTick = tick;
             }
             catch (Exception exception)
             {
@@ -82,14 +140,6 @@ public class ParametricSpline(IEnumerable<Vector2> points, Spline xSpline, Splin
     IEnumerable<KeyValuePair<double, Vector2>> _parametrizedPoints = parametrizedPoints;
 
     public bool IsParametric { get; set; } = false;
-
-    // public SplineCalculationResult Calculate(double t)
-    // {
-    //     // var xResult = XSpline.Calculate(t);
-    //     var yResult = YSpline.Calculate(t);
-
-    //     return yResult;
-    // }
 
     public Vector2? PointAt(double x)
     {

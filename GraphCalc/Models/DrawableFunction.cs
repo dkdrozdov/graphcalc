@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading;
 using MathEvaluation;
 using MathEvaluation.Context;
 using MathNet.Numerics;
@@ -87,12 +88,70 @@ public class DrawableFunction : IDrawableGraph
 
         var compiledExpression = Expression.Compile(new { x = 0.0f });
 
+        bool isOnScreen = true;
+        bool isPrevOnScreen = true;
+
+        bool outOfScreenBottom = false;
+        bool outOfScreenLeft = false;
+        bool outOfScreenTop = false;
+        bool outOfScreenRight = false;
+
+        bool prevOutOfScreenBottom = false;
+        bool prevOutOfScreenLeft = false;
+        bool prevOutOfScreenTop = false;
+        bool prevOutOfScreenRight = false;
+
+        bool gap = false;
+        bool prevGap = false;
+
+        double prevTick = grid.First();
+
         grid.ForEach(tick =>
         {
             try
             {
                 var result = compiledExpression(new { x = (float)tick });
-                points.Add(new Vector2((float)tick, (float)result));
+
+                isPrevOnScreen = isOnScreen;
+                prevOutOfScreenBottom = outOfScreenBottom;
+                prevOutOfScreenLeft = outOfScreenLeft;
+                prevOutOfScreenTop = outOfScreenTop;
+                prevOutOfScreenRight = outOfScreenRight;
+                prevGap = gap;
+
+                isOnScreen = tick <= x2 && tick >= x1 && (float)result <= y2 && (float)result >= y1;
+
+                if (!isOnScreen)
+                {
+                    outOfScreenBottom = result < y1;
+                    outOfScreenLeft = tick < x1;
+                    outOfScreenTop = result > y2;
+                    outOfScreenRight = tick > x2;
+                }
+                else
+                {
+                    outOfScreenBottom = false;
+                    outOfScreenLeft = false;
+                    outOfScreenTop = false;
+                    outOfScreenRight = false;
+                }
+
+                gap = prevOutOfScreenBottom && outOfScreenTop || prevOutOfScreenLeft && outOfScreenRight ||
+                    prevOutOfScreenTop && outOfScreenBottom || prevOutOfScreenRight && outOfScreenLeft;
+
+                if (gap)
+                    points.Add(new Vector2((float)prevTick + (float)step / 2f, float.NaN));
+
+                if (!isPrevOnScreen && isOnScreen)
+                {
+                    var prevResult = compiledExpression(new { x = (float)prevTick });
+                    points.Add(new Vector2((float)prevTick, (float)prevResult));
+                }
+
+                if (isOnScreen || isPrevOnScreen)
+                    points.Add(new Vector2((float)tick, (float)result));
+
+                prevTick = tick;
             }
             catch (Exception exception)
             {

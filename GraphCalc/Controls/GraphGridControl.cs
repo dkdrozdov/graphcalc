@@ -264,7 +264,7 @@ public class GraphGridControl : UserControl
         Point point = new(canvasOffset.X + x * ZoomX * coordinateUnit,
                          canvasOffset.Y - y * ZoomY * coordinateUnit);
 
-        if (point.Y > Bounds.Bottom || point.Y < Bounds.Top) return point.WithY(double.NaN);
+        // if (point.Y > Bounds.Bottom || point.Y < Bounds.Top) return point.WithY(double.NaN);
         return point;
     }
 
